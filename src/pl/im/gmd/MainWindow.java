@@ -34,10 +34,10 @@ import java.awt.event.ActionEvent;
 public class MainWindow extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField nWCornerText;
-	private JTextField nECornerText;
-	private JTextField sWCornerText;
-	private JTextField sECornerText;
+	private JTextField nBorderText;
+	private JTextField sBorderText;
+	private JTextField wBorderText;
+	private JTextField eBorderText;
 	private JLabel zoomLabel;
 	private JComboBox zoomComboBox;
 	private JButton saveDirectoryButton;
@@ -48,6 +48,7 @@ public class MainWindow extends JFrame {
 	private JRadioButton satelliteRadioButton;
 	private Settings settings;
 	private Downloader downloader;
+	private Coordinates coordinates;
 
 	/**
 	 * Launch the application.
@@ -84,24 +85,25 @@ public class MainWindow extends JFrame {
 		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
 		
-		JLabel nWCornerLabel = new JLabel("NW Corner");
-		nWCornerLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		GridBagConstraints gbc_nWCornerLabel = new GridBagConstraints();
-		gbc_nWCornerLabel.fill = GridBagConstraints.VERTICAL;
-		gbc_nWCornerLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_nWCornerLabel.anchor = GridBagConstraints.WEST;
-		gbc_nWCornerLabel.gridx = 0;
-		gbc_nWCornerLabel.gridy = 0;
-		contentPane.add(nWCornerLabel, gbc_nWCornerLabel);
+		JLabel nBorderLabel = new JLabel("Northern Border");
+		nBorderLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		GridBagConstraints gbc_nBorderLabel = new GridBagConstraints();
+		gbc_nBorderLabel.fill = GridBagConstraints.VERTICAL;
+		gbc_nBorderLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_nBorderLabel.anchor = GridBagConstraints.WEST;
+		gbc_nBorderLabel.gridx = 0;
+		gbc_nBorderLabel.gridy = 0;
+		contentPane.add(nBorderLabel, gbc_nBorderLabel);
 		
-		nWCornerText = new JTextField();
-		GridBagConstraints gbc_nWCornerText = new GridBagConstraints();
-		gbc_nWCornerText.insets = new Insets(0, 0, 5, 5);
-		gbc_nWCornerText.fill = GridBagConstraints.HORIZONTAL;
-		gbc_nWCornerText.gridx = 1;
-		gbc_nWCornerText.gridy = 0;
-		contentPane.add(nWCornerText, gbc_nWCornerText);
-		nWCornerText.setColumns(10);
+		nBorderText = new JTextField();
+		nBorderText.setText("0.0");
+		GridBagConstraints gbc_nBorderText = new GridBagConstraints();
+		gbc_nBorderText.insets = new Insets(0, 0, 5, 5);
+		gbc_nBorderText.fill = GridBagConstraints.HORIZONTAL;
+		gbc_nBorderText.gridx = 1;
+		gbc_nBorderText.gridy = 0;
+		contentPane.add(nBorderText, gbc_nBorderText);
+		nBorderText.setColumns(10);
 		
 		zoomLabel = new JLabel("Zoom");
 		GridBagConstraints gbc_zoomLabel = new GridBagConstraints();
@@ -111,24 +113,25 @@ public class MainWindow extends JFrame {
 		gbc_zoomLabel.gridy = 0;
 		contentPane.add(zoomLabel, gbc_zoomLabel);
 		
-		JLabel nECornerLabel = new JLabel("NE Corner");
-		nECornerLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		GridBagConstraints gbc_nECornerLabel = new GridBagConstraints();
-		gbc_nECornerLabel.fill = GridBagConstraints.VERTICAL;
-		gbc_nECornerLabel.anchor = GridBagConstraints.WEST;
-		gbc_nECornerLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_nECornerLabel.gridx = 0;
-		gbc_nECornerLabel.gridy = 1;
-		contentPane.add(nECornerLabel, gbc_nECornerLabel);
+		JLabel sBorderLabel = new JLabel("Southern Border");
+		sBorderLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		GridBagConstraints gbc_sBorderLabel = new GridBagConstraints();
+		gbc_sBorderLabel.fill = GridBagConstraints.VERTICAL;
+		gbc_sBorderLabel.anchor = GridBagConstraints.WEST;
+		gbc_sBorderLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_sBorderLabel.gridx = 0;
+		gbc_sBorderLabel.gridy = 1;
+		contentPane.add(sBorderLabel, gbc_sBorderLabel);
 		
-		nECornerText = new JTextField();
-		GridBagConstraints gbc_nECornerText = new GridBagConstraints();
-		gbc_nECornerText.insets = new Insets(0, 0, 5, 5);
-		gbc_nECornerText.fill = GridBagConstraints.HORIZONTAL;
-		gbc_nECornerText.gridx = 1;
-		gbc_nECornerText.gridy = 1;
-		contentPane.add(nECornerText, gbc_nECornerText);
-		nECornerText.setColumns(10);
+		sBorderText = new JTextField();
+		sBorderText.setText("0.0");
+		GridBagConstraints gbc_sBorderText = new GridBagConstraints();
+		gbc_sBorderText.insets = new Insets(0, 0, 5, 5);
+		gbc_sBorderText.fill = GridBagConstraints.HORIZONTAL;
+		gbc_sBorderText.gridx = 1;
+		gbc_sBorderText.gridy = 1;
+		contentPane.add(sBorderText, gbc_sBorderText);
+		sBorderText.setColumns(10);
 		
 		zoomComboBox = new JComboBox();
 		zoomComboBox.addActionListener(new ActionListener() {
@@ -146,24 +149,25 @@ public class MainWindow extends JFrame {
 		gbc_zoomComboBox.gridy = 1;
 		contentPane.add(zoomComboBox, gbc_zoomComboBox);
 		
-		JLabel sWCornerLabel = new JLabel("SW Corner");
-		sWCornerLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		GridBagConstraints gbc_sWCornerLabel = new GridBagConstraints();
-		gbc_sWCornerLabel.fill = GridBagConstraints.VERTICAL;
-		gbc_sWCornerLabel.anchor = GridBagConstraints.WEST;
-		gbc_sWCornerLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_sWCornerLabel.gridx = 0;
-		gbc_sWCornerLabel.gridy = 2;
-		contentPane.add(sWCornerLabel, gbc_sWCornerLabel);
+		JLabel wBorderLabel = new JLabel("Western Border");
+		wBorderLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		GridBagConstraints gbc_wBorderLabel = new GridBagConstraints();
+		gbc_wBorderLabel.fill = GridBagConstraints.VERTICAL;
+		gbc_wBorderLabel.anchor = GridBagConstraints.WEST;
+		gbc_wBorderLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_wBorderLabel.gridx = 0;
+		gbc_wBorderLabel.gridy = 2;
+		contentPane.add(wBorderLabel, gbc_wBorderLabel);
 		
-		sWCornerText = new JTextField();
-		GridBagConstraints gbc_sWCornerText = new GridBagConstraints();
-		gbc_sWCornerText.insets = new Insets(0, 0, 5, 5);
-		gbc_sWCornerText.fill = GridBagConstraints.HORIZONTAL;
-		gbc_sWCornerText.gridx = 1;
-		gbc_sWCornerText.gridy = 2;
-		contentPane.add(sWCornerText, gbc_sWCornerText);
-		sWCornerText.setColumns(10);
+		wBorderText = new JTextField();
+		wBorderText.setText("0.0");
+		GridBagConstraints gbc_wBorderText = new GridBagConstraints();
+		gbc_wBorderText.insets = new Insets(0, 0, 5, 5);
+		gbc_wBorderText.fill = GridBagConstraints.HORIZONTAL;
+		gbc_wBorderText.gridx = 1;
+		gbc_wBorderText.gridy = 2;
+		contentPane.add(wBorderText, gbc_wBorderText);
+		wBorderText.setColumns(10);
 		
 		mapTypeLabel = new JLabel("Map type");
 		GridBagConstraints gbc_mapTypeLabel = new GridBagConstraints();
@@ -173,24 +177,25 @@ public class MainWindow extends JFrame {
 		gbc_mapTypeLabel.gridy = 2;
 		contentPane.add(mapTypeLabel, gbc_mapTypeLabel);
 		
-		JLabel sECornerLabel = new JLabel("SE Corner");
-		sECornerLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		GridBagConstraints gbc_sECornerLabel = new GridBagConstraints();
-		gbc_sECornerLabel.fill = GridBagConstraints.VERTICAL;
-		gbc_sECornerLabel.anchor = GridBagConstraints.WEST;
-		gbc_sECornerLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_sECornerLabel.gridx = 0;
-		gbc_sECornerLabel.gridy = 3;
-		contentPane.add(sECornerLabel, gbc_sECornerLabel);
+		JLabel eBorderLabel = new JLabel("Eastern Border");
+		eBorderLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		GridBagConstraints gbc_eBorderLabel = new GridBagConstraints();
+		gbc_eBorderLabel.fill = GridBagConstraints.VERTICAL;
+		gbc_eBorderLabel.anchor = GridBagConstraints.WEST;
+		gbc_eBorderLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_eBorderLabel.gridx = 0;
+		gbc_eBorderLabel.gridy = 3;
+		contentPane.add(eBorderLabel, gbc_eBorderLabel);
 		
-		sECornerText = new JTextField();
-		GridBagConstraints gbc_sECornerText = new GridBagConstraints();
-		gbc_sECornerText.insets = new Insets(0, 0, 5, 5);
-		gbc_sECornerText.fill = GridBagConstraints.HORIZONTAL;
-		gbc_sECornerText.gridx = 1;
-		gbc_sECornerText.gridy = 3;
-		contentPane.add(sECornerText, gbc_sECornerText);
-		sECornerText.setColumns(10);
+		eBorderText = new JTextField();
+		eBorderText.setText("0.0");
+		GridBagConstraints gbc_eBorderText = new GridBagConstraints();
+		gbc_eBorderText.insets = new Insets(0, 0, 5, 5);
+		gbc_eBorderText.fill = GridBagConstraints.HORIZONTAL;
+		gbc_eBorderText.gridx = 1;
+		gbc_eBorderText.gridy = 3;
+		contentPane.add(eBorderText, gbc_eBorderText);
+		eBorderText.setColumns(10);
 		
 		mapRadioButton = new JRadioButton("Map");
 		mapRadioButton.addActionListener(new ActionListener() {
@@ -223,7 +228,8 @@ public class MainWindow extends JFrame {
 		startDownloadButton = new JButton("Start Download");
 		startDownloadButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg) {
-				//TODO Start Button service.
+				getCoordinatesFromTextAreas();
+				settings.setCoordinates(coordinates);
 			}
 		});
 		startDownloadButton.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -264,6 +270,13 @@ public class MainWindow extends JFrame {
 		gbc_messageArea.gridx = 0;
 		gbc_messageArea.gridy = 5;
 		contentPane.add(messageArea, gbc_messageArea);
+	}
+
+	protected void getCoordinatesFromTextAreas() {
+		coordinates.setBorderN(nBorderText.getText());
+		coordinates.setBorderS(sBorderText.getText());
+		coordinates.setBorderW(wBorderText.getText());
+		coordinates.setBorderE(eBorderText.getText());
 	}
 
 }

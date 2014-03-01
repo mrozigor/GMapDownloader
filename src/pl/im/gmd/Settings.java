@@ -13,6 +13,7 @@ public class Settings {
 	private String downloadType = null;
 	private int zoom = 1;
 	private String saveDirectory = null;
+	private Coordinates coordinates = null;
 
 	public Settings(MainWindow mainWindow) {
 		this.mainWindow = mainWindow;
@@ -33,5 +34,9 @@ public class Settings {
 	public void setSaveDirectory(String directory) {
 		saveDirectory = directory;
 		System.out.println(directory);
+	}
+
+	public void setCoordinates(Coordinates coordinates) {
+		this.coordinates = coordinates;
 	}
 }
