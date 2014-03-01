@@ -1,6 +1,5 @@
 package pl.im.gmd;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -34,6 +33,8 @@ public class MainWindow extends JFrame {
 	private JLabel mapTypeLabel;
 	private JRadioButton mapRadioButton;
 	private JRadioButton satelliteRadioButton;
+	private Settings settings;
+	private Downloader downloader;
 
 	/**
 	 * Launch the application.
@@ -55,6 +56,8 @@ public class MainWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public MainWindow() {
+		settings = new Settings(this);
+		downloader = new Downloader(this);
 		setTitle("GMap Downloader");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
