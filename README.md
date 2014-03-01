@@ -1,4 +1,4 @@
-GMapDownloader
+GMap Downloader
 ==============
 
 GMaps image downloader.

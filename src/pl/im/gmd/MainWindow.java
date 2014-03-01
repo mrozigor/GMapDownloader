@@ -5,18 +5,31 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
 import java.awt.GridBagLayout;
+
 import javax.swing.JLabel;
+
 import java.awt.GridBagConstraints;
+
 import javax.swing.JTextField;
+
 import java.awt.Insets;
+
+import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
 import java.awt.Font;
+
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.JRadioButton;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class MainWindow extends JFrame {
 
@@ -118,11 +131,17 @@ public class MainWindow extends JFrame {
 		nECornerText.setColumns(10);
 		
 		zoomComboBox = new JComboBox();
+		zoomComboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg) {
+				JComboBox comboBox = (JComboBox)arg.getSource();
+				settings.setZoomLevel(Integer.parseInt(comboBox.getSelectedItem().toString()));
+			}
+		});
 		zoomComboBox.setModel(new DefaultComboBoxModel(ZoomLevel.values()));
 		GridBagConstraints gbc_zoomComboBox = new GridBagConstraints();
 		gbc_zoomComboBox.gridwidth = 2;
 		gbc_zoomComboBox.insets = new Insets(0, 0, 5, 0);
-		gbc_zoomComboBox.fill = GridBagConstraints.HORIZONTAL;
+		gbc_zoomComboBox.fill = GridBagConstraints.BOTH;
 		gbc_zoomComboBox.gridx = 3;
 		gbc_zoomComboBox.gridy = 1;
 		contentPane.add(zoomComboBox, gbc_zoomComboBox);
@@ -174,6 +193,11 @@ public class MainWindow extends JFrame {
 		sECornerText.setColumns(10);
 		
 		mapRadioButton = new JRadioButton("Map");
+		mapRadioButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg) {
+				settings.setDownloadType("map");
+			}
+		});
 		GridBagConstraints gbc_mapRadioButton = new GridBagConstraints();
 		gbc_mapRadioButton.insets = new Insets(0, 0, 5, 5);
 		gbc_mapRadioButton.gridx = 3;
@@ -181,13 +205,27 @@ public class MainWindow extends JFrame {
 		contentPane.add(mapRadioButton, gbc_mapRadioButton);
 		
 		satelliteRadioButton = new JRadioButton("Satellite");
+		satelliteRadioButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg) {
+				settings.setDownloadType("satellite");
+			}
+		});
 		GridBagConstraints gbc_satelliteRadioButton = new GridBagConstraints();
 		gbc_satelliteRadioButton.insets = new Insets(0, 0, 5, 0);
 		gbc_satelliteRadioButton.gridx = 4;
 		gbc_satelliteRadioButton.gridy = 3;
 		contentPane.add(satelliteRadioButton, gbc_satelliteRadioButton);
 		
+		ButtonGroup group = new ButtonGroup();
+		group.add(mapRadioButton);
+		group.add(satelliteRadioButton);
+		
 		startDownloadButton = new JButton("Start Download");
+		startDownloadButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg) {
+				//TODO Start Button service.
+			}
+		});
 		startDownloadButton.setFont(new Font("Tahoma", Font.BOLD, 11));
 		GridBagConstraints gbc_startDownloadButton = new GridBagConstraints();
 		gbc_startDownloadButton.gridwidth = 2;
@@ -198,6 +236,18 @@ public class MainWindow extends JFrame {
 		contentPane.add(startDownloadButton, gbc_startDownloadButton);
 		
 		saveDirectoryButton = new JButton("Save Directory");
+		saveDirectoryButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg) {
+				JFileChooser directoryChooser = new JFileChooser();
+				directoryChooser.setDialogTitle("Choose folder");
+				directoryChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				int returnVal = directoryChooser.showOpenDialog(null);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+		            String directory = directoryChooser.getSelectedFile().toString();
+		            settings.setSaveDirectory(directory);
+		        }
+			}
+		});
 		GridBagConstraints gbc_saveDirectoryButton = new GridBagConstraints();
 		gbc_saveDirectoryButton.gridwidth = 2;
 		gbc_saveDirectoryButton.fill = GridBagConstraints.BOTH;
@@ -207,6 +257,7 @@ public class MainWindow extends JFrame {
 		contentPane.add(saveDirectoryButton, gbc_saveDirectoryButton);
 		
 		messageArea = new JTextPane();
+		messageArea.setEditable(false);
 		GridBagConstraints gbc_messageArea = new GridBagConstraints();
 		gbc_messageArea.gridwidth = 5;
 		gbc_messageArea.fill = GridBagConstraints.BOTH;
