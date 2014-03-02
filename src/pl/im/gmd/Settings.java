@@ -33,10 +33,19 @@ public class Settings {
 
 	public void setSaveDirectory(String directory) {
 		saveDirectory = directory;
-		System.out.println(directory);
 	}
 
 	public void setCoordinates(Coordinates coordinates) {
 		this.coordinates = coordinates;
+	}
+	
+	public void checkAllOptionsAreSelected() throws Exception{
+		if(coordinates == null) {
+			throw new Exception("Please enter coordinates.");
+		} else if(downloadType == null) {
+			throw new Exception("Please select download type.");
+		} else if(saveDirectory == null) {
+			throw new Exception("Please select download directory.");
+		}
 	}
 }

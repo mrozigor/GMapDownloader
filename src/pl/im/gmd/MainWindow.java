@@ -47,8 +47,6 @@ public class MainWindow extends JFrame {
 	private JRadioButton mapRadioButton;
 	private JRadioButton satelliteRadioButton;
 	private Settings settings;
-	private Downloader downloader;
-	private Coordinates coordinates;
 
 	/**
 	 * Launch the application.
@@ -71,7 +69,6 @@ public class MainWindow extends JFrame {
 	 */
 	public MainWindow() {
 		settings = new Settings(this);
-		downloader = new Downloader(this);
 		setTitle("GMap Downloader");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -96,7 +93,7 @@ public class MainWindow extends JFrame {
 		contentPane.add(nBorderLabel, gbc_nBorderLabel);
 		
 		nBorderText = new JTextField();
-		nBorderText.setText("0.0");
+		nBorderText.setText("0");
 		GridBagConstraints gbc_nBorderText = new GridBagConstraints();
 		gbc_nBorderText.insets = new Insets(0, 0, 5, 5);
 		gbc_nBorderText.fill = GridBagConstraints.HORIZONTAL;
@@ -124,7 +121,7 @@ public class MainWindow extends JFrame {
 		contentPane.add(sBorderLabel, gbc_sBorderLabel);
 		
 		sBorderText = new JTextField();
-		sBorderText.setText("0.0");
+		sBorderText.setText("0");
 		GridBagConstraints gbc_sBorderText = new GridBagConstraints();
 		gbc_sBorderText.insets = new Insets(0, 0, 5, 5);
 		gbc_sBorderText.fill = GridBagConstraints.HORIZONTAL;
@@ -160,7 +157,7 @@ public class MainWindow extends JFrame {
 		contentPane.add(wBorderLabel, gbc_wBorderLabel);
 		
 		wBorderText = new JTextField();
-		wBorderText.setText("0.0");
+		wBorderText.setText("0");
 		GridBagConstraints gbc_wBorderText = new GridBagConstraints();
 		gbc_wBorderText.insets = new Insets(0, 0, 5, 5);
 		gbc_wBorderText.fill = GridBagConstraints.HORIZONTAL;
@@ -188,7 +185,7 @@ public class MainWindow extends JFrame {
 		contentPane.add(eBorderLabel, gbc_eBorderLabel);
 		
 		eBorderText = new JTextField();
-		eBorderText.setText("0.0");
+		eBorderText.setText("0");
 		GridBagConstraints gbc_eBorderText = new GridBagConstraints();
 		gbc_eBorderText.insets = new Insets(0, 0, 5, 5);
 		gbc_eBorderText.fill = GridBagConstraints.HORIZONTAL;
@@ -226,12 +223,7 @@ public class MainWindow extends JFrame {
 		group.add(satelliteRadioButton);
 		
 		startDownloadButton = new JButton("Start Download");
-		startDownloadButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg) {
-				getCoordinatesFromTextAreas();
-				settings.setCoordinates(coordinates);
-			}
-		});
+		startDownloadButton.addActionListener(new DownloadButtonListener(this));
 		startDownloadButton.setFont(new Font("Tahoma", Font.BOLD, 11));
 		GridBagConstraints gbc_startDownloadButton = new GridBagConstraints();
 		gbc_startDownloadButton.gridwidth = 2;
@@ -271,12 +263,24 @@ public class MainWindow extends JFrame {
 		gbc_messageArea.gridy = 5;
 		contentPane.add(messageArea, gbc_messageArea);
 	}
-
-	protected void getCoordinatesFromTextAreas() {
-		coordinates.setBorderN(nBorderText.getText());
-		coordinates.setBorderS(sBorderText.getText());
-		coordinates.setBorderW(wBorderText.getText());
-		coordinates.setBorderE(eBorderText.getText());
+	
+	public Settings getSettings() {
+		return settings;
 	}
-
+	
+	public String getNBorderText() {
+		return nBorderText.getText();
+	}
+	
+	public String getSBorderText() {
+		return sBorderText.getText();
+	}
+	
+	public String getEBorderText() {
+		return eBorderText.getText();
+	}
+	
+	public String getWBorderText() {
+		return wBorderText.getText();
+	}
 }
