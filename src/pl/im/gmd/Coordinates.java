@@ -64,4 +64,20 @@ public class Coordinates {
 			borderE = temp;
 		}
 	}
+
+	public double getBorderN() {
+		return borderN;
+	}
+
+	public double getBorderS() {
+		return borderS;
+	}
+
+	public double getBorderW() {
+		return borderW;
+	}
+
+	public double getBorderE() {
+		return borderE;
+	}
 }

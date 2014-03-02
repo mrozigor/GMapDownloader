@@ -3,6 +3,8 @@
  */
 package pl.im.gmd;
 
+import javax.swing.JOptionPane;
+
 /**
  * @author Igor
  * 
@@ -38,14 +40,30 @@ public class Settings {
 	public void setCoordinates(Coordinates coordinates) {
 		this.coordinates = coordinates;
 	}
-	
-	public void checkAllOptionsAreSelected() throws Exception{
-		if(coordinates == null) {
+
+	public void checkAllOptionsAreSelected() throws Exception {
+		if (coordinates == null) {
 			throw new Exception("Please enter coordinates.");
-		} else if(downloadType == null) {
+		} else if (downloadType == null) {
 			throw new Exception("Please select download type.");
-		} else if(saveDirectory == null) {
+		} else if (saveDirectory == null) {
 			throw new Exception("Please select download directory.");
 		}
+	}
+
+	public int displayInformationWindow() {
+		Settings tempSettings = mainWindow.getSettings();
+		String message = "Your settings:\n" + "- N/S Borders - "
+				+ coordinates.getBorderN() + " : " + coordinates.getBorderS()
+				+ "\n" + "- W/E Borders - " + coordinates.getBorderW() + " : "
+				+ coordinates.getBorderE() + "\n" + "- download type - "
+				+ downloadType + "\n" + "- zoom - " + zoom + "\n"
+				+ "- download path - " + saveDirectory + "\n\n"
+				+ "Do you want to proceed?";
+		String[] buttons = { "Yes", "No" };
+		int answer = JOptionPane.showOptionDialog(null, message,
+				"Confirm your settings", JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
+		return answer;
 	}
 }
