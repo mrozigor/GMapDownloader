@@ -52,7 +52,6 @@ public class Settings {
 	}
 
 	public int displayInformationWindow() {
-		Settings tempSettings = mainWindow.getSettings();
 		String message = "Your settings:\n" + "- N/S Borders - "
 				+ coordinates.getBorderN() + " : " + coordinates.getBorderS()
 				+ "\n" + "- W/E Borders - " + coordinates.getBorderW() + " : "
@@ -65,5 +64,13 @@ public class Settings {
 				"Confirm your settings", JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
 		return answer;
+	}
+	
+	public Coordinates getCoordinates() {
+		return coordinates;
+	}
+	
+	public int getZoom() {
+		return zoom;
 	}
 }

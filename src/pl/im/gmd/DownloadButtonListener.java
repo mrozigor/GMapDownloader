@@ -27,7 +27,9 @@ public class DownloadButtonListener implements ActionListener {
 			getCoordinatesFromTextAreasAndSave();
 			mainWindow.getSettings().checkAllOptionsAreSelected();
 			if(mainWindow.getSettings().displayInformationWindow() == JOptionPane.YES_OPTION) {
-				//TODO Downloader start
+				downloader = new Downloader(mainWindow, mainWindow.getSettings());
+				downloader.displayTilesInformationWindow();
+				downloader.startDownload();
 			}
 		} catch(NumberFormatException error) {
 			JOptionPane.showMessageDialog(null, "Please enter correct number.", "Wrong number format", JOptionPane.INFORMATION_MESSAGE);
