@@ -28,6 +28,7 @@ public class DownloadButtonListener implements ActionListener {
 			mainWindow.getSettings().checkAllOptionsAreSelected();
 			if(mainWindow.getSettings().displayInformationWindow() == JOptionPane.YES_OPTION) {
 				downloader = new Downloader(mainWindow, mainWindow.getSettings());
+				downloader.checkIfLastDownloadWasNotCompletedSuccessfully();
 				downloader.displayTilesInformationWindow();
 				downloader.startDownload();
 			}

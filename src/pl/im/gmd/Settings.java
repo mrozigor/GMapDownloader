@@ -73,4 +73,8 @@ public class Settings {
 	public int getZoom() {
 		return zoom;
 	}
+	
+	public String getSaveDirectory() {
+		return saveDirectory;
+	}
 }
