@@ -22,6 +22,7 @@ public class Downloader {
 	private int maximumX;
 	private int minimumY;
 	private int maximumY;
+	private int numberOfTiles;
 	private boolean resumeFailedDownload = false;
 	private Tile[] tilesToDownload = null;
 
@@ -31,9 +32,28 @@ public class Downloader {
 	}
 
 	public void startDownload() {
+		createTilesToDownloadList();
 		// TODO Downloading normal and resume incomplete request. File name
-		// "MissedElements". After successfully downloading, resumeFailedDownload
-		// flag should be false.
+		// "MissedElements". After successfully downloading,
+		// resumeFailedDownload
+		// flag should be false. If download wasn't successfully,
+		// "MissedElements" file should be created at application exit. Nulls
+		// from tilesToDownload should be omitted.
+	}
+
+	private void createTilesToDownloadList() {
+		if (resumeFailedDownload) {
+			return;
+		}
+		Tile[] temp = new Tile[numberOfTiles];
+		int index = 0;
+		for (int x = minimumX; x <= maximumX; ++x) {
+			for (int y = minimumY; y <= maximumY; ++y) {
+				temp[index] = new Tile(x, y);
+				++index;
+			}
+		}
+		tilesToDownload = temp;
 	}
 
 	private int calculateNumberOfTiles() {
@@ -64,7 +84,7 @@ public class Downloader {
 	}
 
 	public void displayTilesInformationWindow() {
-		int numberOfTiles = calculateNumberOfTiles();
+		numberOfTiles = calculateNumberOfTiles();
 		String message = "Total " + numberOfTiles + " tiles to download.";
 		JOptionPane.showMessageDialog(null, message,
 				"Tiles Information Window", JOptionPane.INFORMATION_MESSAGE);
@@ -81,6 +101,7 @@ public class Downloader {
 				stream.close();
 				displayMessage();
 				resumeFailedDownload = true;
+				deleteFile(file);
 			} catch (ClassNotFoundException error) {
 				JOptionPane.showMessageDialog(null, "ClassNotFoundException.",
 						"Error", JOptionPane.ERROR_MESSAGE);
@@ -91,9 +112,17 @@ public class Downloader {
 		}
 	}
 
+	private void deleteFile(File file) {
+		file.delete();
+	}
+
 	private void displayMessage() {
 		String message = "You're going to download missing tiles.";
 		JOptionPane.showMessageDialog(null, message, "Resume latest download",
 				JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	public void cancelDownload() {
+		//TODO Implement cancel download functions.
 	}
 }

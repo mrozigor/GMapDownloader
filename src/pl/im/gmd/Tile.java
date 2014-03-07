@@ -26,4 +26,12 @@ public class Tile implements Serializable {
 	public int getValueY() {
 		return valueY;
 	}
+
+	@Override
+	public String toString() {
+		String temp = "X: " + valueX + "\tY: " + valueY;
+		return temp;
+	}
+	
+	
 }
