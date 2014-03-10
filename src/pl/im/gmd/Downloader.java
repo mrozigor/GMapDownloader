@@ -5,8 +5,12 @@ package pl.im.gmd;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.JOptionPane;
 
@@ -25,6 +29,7 @@ public class Downloader {
 	private int numberOfTiles;
 	private boolean resumeFailedDownload = false;
 	private Tile[] tilesToDownload = null;
+	private ExecutorService downloadExecutor = null;
 
 	public Downloader(MainWindow mainWindow, Settings settings) {
 		this.mainWindow = mainWindow;
@@ -33,12 +38,30 @@ public class Downloader {
 
 	public void startDownload() {
 		createTilesToDownloadList();
-		// TODO Downloading normal and resume incomplete request. File name
-		// "MissedElements". After successfully downloading,
-		// resumeFailedDownload
-		// flag should be false. If download wasn't successfully,
-		// "MissedElements" file should be created at application exit. Nulls
-		// from tilesToDownload should be omitted.
+		download();
+	}
+
+	private void download() {
+		mainWindow.writeMessage("Starting download.");
+		final int MAXIMUM_DOWNLOAD_AT_TIME = 4;
+		downloadExecutor = Executors
+				.newFixedThreadPool(MAXIMUM_DOWNLOAD_AT_TIME);
+		for (int temp = 0; temp < tilesToDownload.length; ++temp) {
+			if (tilesToDownload[temp].isDownloaded() == false) {
+				downloadExecutor.execute(tilesToDownload[temp]);
+			}
+		}
+		downloadExecutor.shutdown();
+		while (!downloadExecutor.isTerminated()) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				JOptionPane.showMessageDialog(null, "InterruptedException during downloading.", "InterruptedException",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		resumeFailedDownload = false;
+		tilesToDownload = null;
 	}
 
 	private void createTilesToDownloadList() {
@@ -49,7 +72,7 @@ public class Downloader {
 		int index = 0;
 		for (int x = minimumX; x <= maximumX; ++x) {
 			for (int y = minimumY; y <= maximumY; ++y) {
-				temp[index] = new Tile(x, y);
+				temp[index] = new Tile(x, y, mainWindow);
 				++index;
 			}
 		}
@@ -58,7 +81,7 @@ public class Downloader {
 
 	private int calculateNumberOfTiles() {
 		if (resumeFailedDownload) {
-			return (tilesToDownload.length);
+			return calculateTilesToDownloadIfDownloadWasFailed();
 		}
 		Coordinates coordinates = settings.getCoordinates();
 		int zoom = settings.getZoom();
@@ -68,6 +91,16 @@ public class Downloader {
 		maximumY = calculateTileY(coordinates.getBorderS(), zoom);
 		minimumY = calculateTileY(coordinates.getBorderN(), zoom);
 		return (((maximumX - minimumX) + 1) * ((maximumY - minimumY) + 1));
+	}
+
+	private int calculateTilesToDownloadIfDownloadWasFailed() {
+		int counter = 0;
+		for (int temp = 0; temp < tilesToDownload.length; ++temp) {
+			if (tilesToDownload[temp] != null) {
+				++counter;
+			}
+		}
+		return counter;
 	}
 
 	private int calculateTileX(double longitude, int zoom) {
@@ -123,6 +156,26 @@ public class Downloader {
 	}
 
 	public void cancelDownload() {
-		//TODO Implement cancel download functions.
+		downloadExecutor.shutdownNow();
+		try {
+			Thread.sleep(10000);	//Waiting if active download threads are ending.
+			mainWindow.writeMessage("Wait 10s to complete the process.");
+		} catch (InterruptedException e) {
+			JOptionPane.showMessageDialog(null, "Interrupted Exception during canceling download.", "InterruptedException",
+					JOptionPane.ERROR_MESSAGE);
+		}
+		try {
+			File file = new File(settings.getSaveDirectory() + File.separator
+					+ "MissedElements");
+			ObjectOutputStream stream = new ObjectOutputStream(
+					new FileOutputStream(file));
+			stream.writeObject(tilesToDownload);
+			stream.close();
+			resumeFailedDownload = false;
+			tilesToDownload = null;
+		} catch (IOException error) {
+			JOptionPane.showMessageDialog(null, "IOException.", "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 }

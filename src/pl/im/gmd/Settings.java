@@ -77,4 +77,8 @@ public class Settings {
 	public String getSaveDirectory() {
 		return saveDirectory;
 	}
+	
+	public String getDownloadType() {
+		return downloadType;
+	}
 }

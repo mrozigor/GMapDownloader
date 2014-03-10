@@ -30,6 +30,8 @@ import javax.swing.JRadioButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class MainWindow extends JFrame {
 
@@ -69,6 +71,12 @@ public class MainWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public MainWindow() {
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				cancelDownloadButton.doClick();
+			}
+		});
+
 		settings = new Settings(this);
 		setTitle("GMap Downloader");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -226,7 +234,8 @@ public class MainWindow extends JFrame {
 		group.add(mapRadioButton);
 		group.add(satelliteRadioButton);
 
-		DownloadAndCancelButtonListener tempListener = new DownloadAndCancelButtonListener(this);
+		DownloadAndCancelButtonListener tempListener = new DownloadAndCancelButtonListener(
+				this);
 		startDownloadButton = new JButton("Start Download");
 		startDownloadButton.addActionListener(tempListener);
 		startDownloadButton.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -301,5 +310,9 @@ public class MainWindow extends JFrame {
 
 	public String getWBorderText() {
 		return wBorderText.getText();
+	}
+
+	public void writeMessage(String message) {
+		messageArea.setText(messageArea.getText().concat("\n" + message));
 	}
 }

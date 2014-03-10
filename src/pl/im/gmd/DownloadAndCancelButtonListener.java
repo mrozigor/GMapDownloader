@@ -47,7 +47,9 @@ public class DownloadAndCancelButtonListener implements ActionListener {
 						"Missing settings", JOptionPane.ERROR_MESSAGE);
 			}
 		} else if (arg.getSource() == mainWindow.cancelDownloadButton) {
-			downloader.cancelDownload();
+			if (downloader != null && mainWindow.cancelDownloadButton.isVisible()) {
+				downloader.cancelDownload();
+			}
 			mainWindow.cancelDownloadButton.setVisible(false);
 			mainWindow.startDownloadButton.setVisible(true);
 			mainWindow.saveDirectoryButton.setVisible(true);
