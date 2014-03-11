@@ -21,6 +21,7 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JScrollPane;
 
 import java.awt.Font;
 
@@ -283,13 +284,15 @@ public class MainWindow extends JFrame {
 		contentPane.add(saveDirectoryButton, gbc_saveDirectoryButton);
 
 		messageArea = new JTextPane();
+		JScrollPane scrollPane = new JScrollPane(messageArea);
+		messageArea.setText("");
 		messageArea.setEditable(false);
 		GridBagConstraints gbc_messageArea = new GridBagConstraints();
 		gbc_messageArea.gridwidth = 5;
 		gbc_messageArea.fill = GridBagConstraints.BOTH;
 		gbc_messageArea.gridx = 0;
 		gbc_messageArea.gridy = 5;
-		contentPane.add(messageArea, gbc_messageArea);
+		contentPane.add(scrollPane, gbc_messageArea);
 	}
 
 	public Settings getSettings() {
@@ -312,7 +315,12 @@ public class MainWindow extends JFrame {
 		return wBorderText.getText();
 	}
 
-	public void writeMessage(String message) {
+	public synchronized void writeMessage(String message) {
 		messageArea.setText(messageArea.getText().concat("\n" + message));
+		this.update(this.getGraphics());
+	}
+
+	public void clearMessageArea() {
+		messageArea.setText("");
 	}
 }

@@ -30,6 +30,7 @@ public class Downloader {
 	private boolean resumeFailedDownload = false;
 	private Tile[] tilesToDownload = null;
 	private ExecutorService downloadExecutor = null;
+	private int numberOfTilesDownloadedSoFar = 0;
 
 	public Downloader(MainWindow mainWindow, Settings settings) {
 		this.mainWindow = mainWindow;
@@ -62,6 +63,9 @@ public class Downloader {
 		}
 		resumeFailedDownload = false;
 		tilesToDownload = null;
+		mainWindow.cancelDownloadButton.setVisible(false);
+		mainWindow.startDownloadButton.setVisible(true);
+		mainWindow.saveDirectoryButton.setVisible(true);
 	}
 
 	private void createTilesToDownloadList() {
@@ -72,7 +76,7 @@ public class Downloader {
 		int index = 0;
 		for (int x = minimumX; x <= maximumX; ++x) {
 			for (int y = minimumY; y <= maximumY; ++y) {
-				temp[index] = new Tile(x, y, mainWindow);
+				temp[index] = new Tile(x, y, mainWindow, this);
 				++index;
 			}
 		}
@@ -177,5 +181,11 @@ public class Downloader {
 			JOptionPane.showMessageDialog(null, "IOException.", "Error",
 					JOptionPane.ERROR_MESSAGE);
 		}
+	}
+
+	public synchronized String getNumberOfDownloadedTilesSoFar() {
+		++numberOfTilesDownloadedSoFar;
+		String temp = "(" + numberOfTilesDownloadedSoFar + "/" + numberOfTiles + ")";
+		return temp;
 	}
 }

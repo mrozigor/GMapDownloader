@@ -33,6 +33,7 @@ public class DownloadAndCancelButtonListener implements ActionListener {
 							mainWindow.getSettings());
 					downloader.checkIfLastDownloadWasNotCompletedSuccessfully();
 					downloader.displayTilesInformationWindow();
+					mainWindow.clearMessageArea();
 					downloader.startDownload();
 				}
 			} catch (NumberFormatException error) {
