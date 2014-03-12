@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -24,12 +25,15 @@ public class Tile extends Thread implements Serializable {
 	private int valueX;
 	private int valueY;
 	private MainWindow mainWindow;
+	private Downloader downloader;
 	private boolean isDownloaded = false;
 
-	public Tile(int valueX, int valueY, MainWindow mainWindow) {
+	public Tile(int valueX, int valueY, MainWindow mainWindow,
+			Downloader downloader) {
 		this.valueX = valueX;
 		this.valueY = valueY;
 		this.mainWindow = mainWindow;
+		this.downloader = downloader;
 	}
 
 	public int getValueX() {
@@ -42,7 +46,7 @@ public class Tile extends Thread implements Serializable {
 
 	@Override
 	public String toString() {
-		String temp = "X: " + valueX + "\tY: " + valueY;
+		String temp = "X: " + valueX + " Y: " + valueY;
 		return temp;
 	}
 
@@ -57,7 +61,7 @@ public class Tile extends Thread implements Serializable {
 			URL connection = new URL(url);
 			BufferedInputStream input = new BufferedInputStream(
 					connection.openStream());
-			byte[] tab = new byte[500000];
+			byte[] tab = new byte[20000];
 			int temp;
 			int i = 0;
 			while ((temp = input.read()) != -1) {
@@ -72,13 +76,23 @@ public class Tile extends Thread implements Serializable {
 			Thread.sleep(randomSleep());
 			isDownloaded = true;
 			mainWindow.writeMessage("Tile " + this
-					+ " was downloaded successfully.");
+					+ " was downloaded successfully "
+					+ downloader.getNumberOfDownloadedTilesSoFar());
 		} catch (MalformedURLException e) {
 			JOptionPane.showMessageDialog(null, "MalformedURLException.",
 					"MalformedURLException", JOptionPane.ERROR_MESSAGE);
 		} catch (FileNotFoundException error) {
 			mainWindow.writeMessage("Tile " + this
 					+ " isn't available at this zoom.");
+			InputStream input = getClass().getResourceAsStream(
+					"tileNotAvailable.png");
+			try {
+				saveTileAsNotAvailable(input);
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(null,
+						"IOException when saving not available tile..",
+						"IOException", JOptionPane.ERROR_MESSAGE);
+			}
 		} catch (IOException e) {
 			mainWindow.writeMessage("Tile " + this
 					+ " wasn't downloaded successfully. Error 400.");
@@ -89,15 +103,34 @@ public class Tile extends Thread implements Serializable {
 		}
 	}
 
+	private void saveTileAsNotAvailable(InputStream input) throws IOException {
+		BufferedInputStream inpt = new BufferedInputStream(input);
+		byte[] tab = new byte[20000];
+		int temp;
+		int i = 0;
+		while ((temp = inpt.read()) != -1) {
+			tab[i] = (byte) temp;
+			++i;
+		}
+		inpt.close();
+		input.close();
+		String filePath = generateFilePath(mainWindow.getSettings());
+		FileOutputStream file = new FileOutputStream(filePath);
+		file.write(tab);
+		file.close();
+	}
+
 	private long randomSleep() {
 		Random generator = new Random();
 		long time = generator.nextInt(5000);
+		time += 1000;
 		return time;
 	}
 
 	private String generateFilePath(Settings settings) {
 		String temp = settings.getSaveDirectory() + File.separator + "tile_"
-				+ valueX + "_" + valueY + "_z" + settings.getZoom();
+				+ valueX + "_" + valueY + "_z" + settings.getZoom() + "_"
+				+ settings.getDownloadType() + ".png";
 		return temp;
 	}
 
