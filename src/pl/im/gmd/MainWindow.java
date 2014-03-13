@@ -47,6 +47,7 @@ public class MainWindow extends JFrame {
 	JButton startDownloadButton;
 	JButton cancelDownloadButton;
 	private JTextPane messageArea;
+	private JScrollPane scrollPane;
 	private JLabel mapTypeLabel;
 	private JRadioButton mapRadioButton;
 	private JRadioButton satelliteRadioButton;
@@ -284,7 +285,7 @@ public class MainWindow extends JFrame {
 		contentPane.add(saveDirectoryButton, gbc_saveDirectoryButton);
 
 		messageArea = new JTextPane();
-		JScrollPane scrollPane = new JScrollPane(messageArea);
+		scrollPane = new JScrollPane(messageArea);
 		messageArea.setText("");
 		messageArea.setEditable(false);
 		GridBagConstraints gbc_messageArea = new GridBagConstraints();
@@ -318,6 +319,8 @@ public class MainWindow extends JFrame {
 	public synchronized void writeMessage(String message) {
 		messageArea.setText(messageArea.getText().concat("\n" + message));
 		this.update(this.getGraphics());
+		scrollPane.update(scrollPane.getGraphics());
+		
 	}
 
 	public void clearMessageArea() {
