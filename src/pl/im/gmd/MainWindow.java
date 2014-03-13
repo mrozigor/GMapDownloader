@@ -318,9 +318,6 @@ public class MainWindow extends JFrame {
 
 	public synchronized void writeMessage(String message) {
 		messageArea.setText(messageArea.getText().concat("\n" + message));
-		this.update(this.getGraphics());
-		scrollPane.update(scrollPane.getGraphics());
-		
 	}
 
 	public void clearMessageArea() {
