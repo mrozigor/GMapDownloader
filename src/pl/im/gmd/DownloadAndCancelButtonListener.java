@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
  * @author Igor
  * 
  */
-public class DownloadAndCancelButtonListener implements ActionListener {
+public class DownloadAndCancelButtonListener extends Thread implements ActionListener {
 
 	private MainWindow mainWindow;
 	private Downloader downloader;

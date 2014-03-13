@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
  * @author Igor
  * 
  */
-public class Downloader {
+public class Downloader extends Thread {
 
 	private MainWindow mainWindow;
 	private Settings settings;
@@ -38,6 +38,11 @@ public class Downloader {
 	}
 
 	public void startDownload() {
+		start();
+	}
+
+	@Override
+	public void run() {
 		createTilesToDownloadList();
 		download();
 	}
