@@ -10,16 +10,11 @@ import javax.swing.JOptionPane;
  * 
  */
 public class Settings {
-
-	private MainWindow mainWindow = null;
+	
 	private String downloadType = null;
 	private int zoom = 1;
 	private String saveDirectory = null;
 	private Coordinates coordinates = null;
-
-	public Settings(MainWindow mainWindow) {
-		this.mainWindow = mainWindow;
-	}
 
 	/**
 	 * @param type

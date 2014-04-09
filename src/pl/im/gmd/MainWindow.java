@@ -1,5 +1,8 @@
 package pl.im.gmd;
 
+// TODO Rewrite re-downloading system
+// TODO Add downloading using proxy servers from list
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -79,7 +82,7 @@ public class MainWindow extends JFrame {
 			}
 		});
 
-		settings = new Settings(this);
+		settings = new Settings();
 		setTitle("GMap Downloader");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
