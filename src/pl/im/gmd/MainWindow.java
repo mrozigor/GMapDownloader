@@ -46,9 +46,9 @@ public class MainWindow extends JFrame {
 	private JTextField eBorderText;
 	private JLabel zoomLabel;
 	private JComboBox zoomComboBox;
-	JButton saveDirectoryButton;
-	JButton startDownloadButton;
-	JButton cancelDownloadButton;
+	private JButton saveDirectoryButton;
+	private JButton startDownloadButton;
+	private JButton cancelDownloadButton;
 	private JTextPane messageArea;
 	private JScrollPane scrollPane;
 	private JLabel mapTypeLabel;
@@ -239,10 +239,9 @@ public class MainWindow extends JFrame {
 		group.add(mapRadioButton);
 		group.add(satelliteRadioButton);
 
-		DownloadAndCancelButtonListener tempListener = new DownloadAndCancelButtonListener(
-				this);
+		ButtonsListener buttonsListener = new ButtonsListener(this);
 		startDownloadButton = new JButton("Start Download");
-		startDownloadButton.addActionListener(tempListener);
+		startDownloadButton.addActionListener(buttonsListener);
 		startDownloadButton.setFont(new Font("Tahoma", Font.BOLD, 11));
 		GridBagConstraints gbc_startDownloadButton = new GridBagConstraints();
 		gbc_startDownloadButton.gridwidth = 2;
@@ -253,7 +252,7 @@ public class MainWindow extends JFrame {
 		contentPane.add(startDownloadButton, gbc_startDownloadButton);
 
 		cancelDownloadButton = new JButton("Cancel Download");
-		cancelDownloadButton.addActionListener(tempListener);
+		cancelDownloadButton.addActionListener(buttonsListener);
 		cancelDownloadButton.setFont(new Font("Tahoma", Font.BOLD, 11));
 		GridBagConstraints gbc_cancelDownloadButton = new GridBagConstraints();
 		gbc_cancelDownloadButton.gridwidth = 5;
@@ -265,20 +264,7 @@ public class MainWindow extends JFrame {
 		cancelDownloadButton.setVisible(false);
 
 		saveDirectoryButton = new JButton("Save Directory");
-		saveDirectoryButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg) {
-				JFileChooser directoryChooser = new JFileChooser();
-				directoryChooser.setDialogTitle("Choose folder");
-				directoryChooser
-						.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				int returnVal = directoryChooser.showOpenDialog(null);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					String directory = directoryChooser.getSelectedFile()
-							.toString();
-					settings.setSaveDirectory(directory);
-				}
-			}
-		});
+		saveDirectoryButton.addActionListener(buttonsListener);
 		GridBagConstraints gbc_saveDirectoryButton = new GridBagConstraints();
 		gbc_saveDirectoryButton.gridwidth = 2;
 		gbc_saveDirectoryButton.fill = GridBagConstraints.BOTH;
@@ -303,6 +289,18 @@ public class MainWindow extends JFrame {
 		return settings;
 	}
 
+	public JButton getSaveDirectoryButton() {
+		return saveDirectoryButton;
+	}
+
+	public JButton getStartDownloadButton() {
+		return startDownloadButton;
+	}
+
+	public JButton getCancelDownloadButton() {
+		return cancelDownloadButton;
+	}
+
 	public String getNBorderText() {
 		return nBorderText.getText();
 	}
@@ -325,5 +323,17 @@ public class MainWindow extends JFrame {
 
 	public void clearMessageArea() {
 		messageArea.setText("");
+	}
+
+	public void setButtonsInInitialConfiguration() {
+		startDownloadButton.setVisible(true);
+		saveDirectoryButton.setVisible(true);
+		cancelDownloadButton.setVisible(false);
+	}
+
+	public void setButtonsInSwapedConfiguration() {
+		startDownloadButton.setVisible(false);
+		saveDirectoryButton.setVisible(false);
+		cancelDownloadButton.setVisible(true);
 	}
 }

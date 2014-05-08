@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JOptionPane;
 
@@ -62,15 +63,14 @@ public class Downloader extends Thread {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				JOptionPane.showMessageDialog(null, "InterruptedException during downloading.", "InterruptedException",
-						JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null,
+						"InterruptedException during downloading.",
+						"InterruptedException", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		resumeFailedDownload = false;
 		tilesToDownload = null;
-		mainWindow.cancelDownloadButton.setVisible(false);
-		mainWindow.startDownloadButton.setVisible(true);
-		mainWindow.saveDirectoryButton.setVisible(true);
+		mainWindow.setButtonsInInitialConfiguration();
 	}
 
 	private void createTilesToDownloadList() {
@@ -167,11 +167,12 @@ public class Downloader extends Thread {
 	public void cancelDownload() {
 		downloadExecutor.shutdownNow();
 		try {
-			Thread.sleep(10000);	//Waiting if active download threads are ending.
-			mainWindow.writeMessage("Wait 10s to complete the process.");
+			while (!downloadExecutor.awaitTermination(1, TimeUnit.SECONDS));
+			mainWindow.writeMessage("Download canceled.");
 		} catch (InterruptedException e) {
-			JOptionPane.showMessageDialog(null, "Interrupted Exception during canceling download.", "InterruptedException",
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null,
+					"Interrupted Exception during canceling download.",
+					"InterruptedException", JOptionPane.ERROR_MESSAGE);
 		}
 		try {
 			File file = new File(settings.getSaveDirectory() + File.separator
@@ -190,7 +191,8 @@ public class Downloader extends Thread {
 
 	public synchronized String getNumberOfDownloadedTilesSoFar() {
 		++numberOfTilesDownloadedSoFar;
-		String temp = "(" + numberOfTilesDownloadedSoFar + "/" + numberOfTiles + ")";
+		String temp = "(" + numberOfTilesDownloadedSoFar + "/" + numberOfTiles
+				+ ")";
 		return temp;
 	}
 }

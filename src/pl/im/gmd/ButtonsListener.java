@@ -6,32 +6,36 @@ package pl.im.gmd;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
  * @author Igor
  * 
  */
-public class DownloadAndCancelButtonListener extends Thread implements ActionListener {
+public class ButtonsListener extends Thread implements ActionListener {
 
 	private MainWindow mainWindow;
+	private Settings settings;
 	private Downloader downloader;
 
-	public DownloadAndCancelButtonListener(MainWindow window) {
+	public ButtonsListener(MainWindow window) {
 		mainWindow = window;
+		this.settings = mainWindow.getSettings();
 	}
 
+	// TODO Refactoring stoped in this method
 	@Override
 	public void actionPerformed(ActionEvent arg) {
-		if (arg.getSource() == mainWindow.startDownloadButton) {
+		if (arg.getSource() == mainWindow.getStartDownloadButton()) {
 			try {
 				getCoordinatesFromTextAreasAndSave();
+				downloader.checkIfLastDownloadWasNotCompletedSuccessfully();
 				mainWindow.getSettings().checkAllOptionsAreSelected();
 				if (mainWindow.getSettings().displayInformationWindow() == JOptionPane.YES_OPTION) {
-					swapButtons();
+					mainWindow.setButtonsInSwapedConfiguration();
 					downloader = new Downloader(mainWindow,
 							mainWindow.getSettings());
-					downloader.checkIfLastDownloadWasNotCompletedSuccessfully();
 					downloader.displayTilesInformationWindow();
 					mainWindow.clearMessageArea();
 					downloader.startDownload();
@@ -47,20 +51,23 @@ public class DownloadAndCancelButtonListener extends Thread implements ActionLis
 				JOptionPane.showMessageDialog(null, error.getMessage(),
 						"Missing settings", JOptionPane.ERROR_MESSAGE);
 			}
-		} else if (arg.getSource() == mainWindow.cancelDownloadButton) {
-			if (downloader != null && mainWindow.cancelDownloadButton.isVisible()) {
+		} else if (arg.getSource() == mainWindow.getCancelDownloadButton()) {
+			if (downloader != null && mainWindow.getCancelDownloadButton().isVisible()) {
 				downloader.cancelDownload();
+				mainWindow.setButtonsInInitialConfiguration();
 			}
-			mainWindow.cancelDownloadButton.setVisible(false);
-			mainWindow.startDownloadButton.setVisible(true);
-			mainWindow.saveDirectoryButton.setVisible(true);
+		} else if (arg.getSource() == mainWindow.getSaveDirectoryButton()) {
+			JFileChooser directoryChooser = new JFileChooser();
+			directoryChooser.setDialogTitle("Choose folder");
+			directoryChooser
+					.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			int returnVal = directoryChooser.showOpenDialog(null);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				String directory = directoryChooser.getSelectedFile()
+						.toString();
+				settings.setSaveDirectory(directory);
+			}
 		}
-	}
-
-	private void swapButtons() {
-		mainWindow.startDownloadButton.setVisible(false);
-		mainWindow.saveDirectoryButton.setVisible(false);
-		mainWindow.cancelDownloadButton.setVisible(true);
 	}
 
 	void getCoordinatesFromTextAreasAndSave() throws WrongCoordinatesException {
