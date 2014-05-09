@@ -5,6 +5,12 @@ package pl.im.gmd;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -24,20 +30,21 @@ public class ButtonsListener extends Thread implements ActionListener {
 		this.settings = mainWindow.getSettings();
 	}
 
-	// TODO Refactoring stoped in this method
 	@Override
 	public void actionPerformed(ActionEvent arg) {
 		if (arg.getSource() == mainWindow.getStartDownloadButton()) {
 			try {
 				getCoordinatesFromTextAreasAndSave();
-				downloader.checkIfLastDownloadWasNotCompletedSuccessfully();
+				mainWindow.clearMessageArea();
+				downloader = new Downloader(mainWindow);
+				if (checkIfLastDownloadWasNotCompletedSuccessfully()) {
+					if (checkIfUserWantsResumeDownloading() == JOptionPane.YES_OPTION) {
+						swapSettings();
+					}
+				}
 				mainWindow.getSettings().checkAllOptionsAreSelected();
-				if (mainWindow.getSettings().displayInformationWindow() == JOptionPane.YES_OPTION) {
+				if (downloader.displayInformationWindow() == JOptionPane.YES_OPTION) {
 					mainWindow.setButtonsInSwapedConfiguration();
-					downloader = new Downloader(mainWindow,
-							mainWindow.getSettings());
-					downloader.displayTilesInformationWindow();
-					mainWindow.clearMessageArea();
 					downloader.startDownload();
 				}
 			} catch (NumberFormatException error) {
@@ -52,7 +59,8 @@ public class ButtonsListener extends Thread implements ActionListener {
 						"Missing settings", JOptionPane.ERROR_MESSAGE);
 			}
 		} else if (arg.getSource() == mainWindow.getCancelDownloadButton()) {
-			if (downloader != null && mainWindow.getCancelDownloadButton().isVisible()) {
+			if (downloader != null
+					&& mainWindow.getCancelDownloadButton().isVisible()) {
 				downloader.cancelDownload();
 				mainWindow.setButtonsInInitialConfiguration();
 			}
@@ -68,6 +76,46 @@ public class ButtonsListener extends Thread implements ActionListener {
 				settings.setSaveDirectory(directory);
 			}
 		}
+	}
+
+	private void swapSettings() {
+		try {
+			File file = new File(settings.getSaveDirectory() + File.separator
+					+ "MissedElements");
+			ObjectInputStream stream = new ObjectInputStream(
+					new FileInputStream(file));
+			Settings tempSettings = (Settings) stream.readObject();
+			List<Tile> tilesToDownload = (ArrayList<Tile>) stream.readObject();
+			settings = tempSettings;
+			mainWindow.setSettings(tempSettings);
+			downloader.setTilesToDownload(tilesToDownload);
+			stream.close();
+			file.delete();
+		} catch (ClassNotFoundException error) {
+			JOptionPane.showMessageDialog(null, "ClassNotFoundException.",
+					"Error", JOptionPane.ERROR_MESSAGE);
+		} catch (IOException error) {
+			JOptionPane.showMessageDialog(null, "IOException.", "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private boolean checkIfLastDownloadWasNotCompletedSuccessfully() {
+		File file = new File(settings.getSaveDirectory() + File.separator
+				+ "MissedElements");
+		if (file.isFile()) {
+			return true;
+		}
+		return false;
+	}
+
+	private int checkIfUserWantsResumeDownloading() {
+		String[] buttons = { "Yes", "No" };
+		int answer = JOptionPane.showOptionDialog(null,
+				"Do you want to resume downloading?", "Information",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+				buttons, buttons[0]);
+		return answer;
 	}
 
 	void getCoordinatesFromTextAreasAndSave() throws WrongCoordinatesException {

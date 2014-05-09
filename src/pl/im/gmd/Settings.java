@@ -3,7 +3,6 @@
  */
 package pl.im.gmd;
 
-import javax.swing.JOptionPane;
 
 /**
  * @author Igor
@@ -44,21 +43,6 @@ public class Settings {
 		} else if (saveDirectory == null) {
 			throw new Exception("Please select download directory.");
 		}
-	}
-
-	public int displayInformationWindow() {
-		String message = "Your settings:\n" + "- N/S Borders - "
-				+ coordinates.getBorderN() + " : " + coordinates.getBorderS()
-				+ "\n" + "- W/E Borders - " + coordinates.getBorderW() + " : "
-				+ coordinates.getBorderE() + "\n" + "- download type - "
-				+ downloadType + "\n" + "- zoom - " + zoom + "\n"
-				+ "- download path - " + saveDirectory + "\n\n"
-				+ "Do you want to proceed?";
-		String[] buttons = { "Yes", "No" };
-		int answer = JOptionPane.showOptionDialog(null, message,
-				"Confirm your settings", JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
-		return answer;
 	}
 	
 	public Coordinates getCoordinates() {

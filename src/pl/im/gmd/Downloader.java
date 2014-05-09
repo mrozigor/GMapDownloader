@@ -4,11 +4,12 @@
 package pl.im.gmd;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -28,14 +29,17 @@ public class Downloader extends Thread {
 	private int minimumY;
 	private int maximumY;
 	private int numberOfTiles;
-	private boolean resumeFailedDownload = false;
-	private Tile[] tilesToDownload = null;
+	private List<Tile> tilesToDownload = null;
 	private ExecutorService downloadExecutor = null;
 	private int numberOfTilesDownloadedSoFar = 0;
+	private final int MAXIMUM_DOWNLOAD_AT_TIME = 4;
+	private ProxyServerManager proxyServerManager = null;
+	
 
-	public Downloader(MainWindow mainWindow, Settings settings) {
+	public Downloader(MainWindow mainWindow) {
 		this.mainWindow = mainWindow;
-		this.settings = settings;
+		this.settings = mainWindow.getSettings();
+		this.proxyServerManager = new ProxyServerManager();
 	}
 
 	public void startDownload() {
@@ -50,13 +54,10 @@ public class Downloader extends Thread {
 
 	private void download() {
 		mainWindow.writeMessage("Starting download.");
-		final int MAXIMUM_DOWNLOAD_AT_TIME = 4;
 		downloadExecutor = Executors
 				.newFixedThreadPool(MAXIMUM_DOWNLOAD_AT_TIME);
-		for (int temp = 0; temp < tilesToDownload.length; ++temp) {
-			if (tilesToDownload[temp].isDownloaded() == false) {
-				downloadExecutor.execute(tilesToDownload[temp]);
-			}
+		for (Tile tile : tilesToDownload) {
+			downloadExecutor.execute(tile);
 		}
 		downloadExecutor.shutdown();
 		while (!downloadExecutor.isTerminated()) {
@@ -68,29 +69,25 @@ public class Downloader extends Thread {
 						"InterruptedException", JOptionPane.ERROR_MESSAGE);
 			}
 		}
-		resumeFailedDownload = false;
 		tilesToDownload = null;
 		mainWindow.setButtonsInInitialConfiguration();
 	}
 
 	private void createTilesToDownloadList() {
-		if (resumeFailedDownload) {
+		if (tilesToDownload != null) {
 			return;
 		}
-		Tile[] temp = new Tile[numberOfTiles];
-		int index = 0;
+		tilesToDownload = new ArrayList<Tile>();
 		for (int x = minimumX; x <= maximumX; ++x) {
 			for (int y = minimumY; y <= maximumY; ++y) {
-				temp[index] = new Tile(x, y, mainWindow, this);
-				++index;
+				tilesToDownload.add(new Tile(x, y, mainWindow, this));
 			}
 		}
-		tilesToDownload = temp;
 	}
 
 	private int calculateNumberOfTiles() {
-		if (resumeFailedDownload) {
-			return calculateTilesToDownloadIfDownloadWasFailed();
+		if (tilesToDownload != null) {
+			return calculateTilesToDownloadIfResumingDownload();
 		}
 		Coordinates coordinates = settings.getCoordinates();
 		int zoom = settings.getZoom();
@@ -102,13 +99,8 @@ public class Downloader extends Thread {
 		return (((maximumX - minimumX) + 1) * ((maximumY - minimumY) + 1));
 	}
 
-	private int calculateTilesToDownloadIfDownloadWasFailed() {
-		int counter = 0;
-		for (int temp = 0; temp < tilesToDownload.length; ++temp) {
-			if (tilesToDownload[temp] != null) {
-				++counter;
-			}
-		}
+	private int calculateTilesToDownloadIfResumingDownload() {
+		int counter = tilesToDownload.size();
 		return counter;
 	}
 
@@ -125,43 +117,23 @@ public class Downloader extends Thread {
 		return result;
 	}
 
-	public void displayTilesInformationWindow() {
-		numberOfTiles = calculateNumberOfTiles();
-		String message = "Total " + numberOfTiles + " tiles to download.";
-		JOptionPane.showMessageDialog(null, message,
-				"Tiles Information Window", JOptionPane.INFORMATION_MESSAGE);
+	public synchronized String getNumberOfDownloadedTilesSoFar() {
+		++numberOfTilesDownloadedSoFar;
+		String temp = "(" + numberOfTilesDownloadedSoFar + "/" + numberOfTiles
+				+ ")";
+		return temp;
+	}
+	
+	public ProxyServerManager getProxyServerManager() {
+		return proxyServerManager;
+		
+	}
+	public void setSettings(Settings settings) {
+		this.settings = settings;
 	}
 
-	public void checkIfLastDownloadWasNotCompletedSuccessfully() {
-		File file = new File(settings.getSaveDirectory() + File.separator
-				+ "MissedElements");
-		if (file.isFile()) {
-			try {
-				ObjectInputStream stream = new ObjectInputStream(
-						new FileInputStream(file));
-				tilesToDownload = (Tile[]) stream.readObject();
-				stream.close();
-				displayMessage();
-				resumeFailedDownload = true;
-				deleteFile(file);
-			} catch (ClassNotFoundException error) {
-				JOptionPane.showMessageDialog(null, "ClassNotFoundException.",
-						"Error", JOptionPane.ERROR_MESSAGE);
-			} catch (IOException error) {
-				JOptionPane.showMessageDialog(null, "IOException.", "Error",
-						JOptionPane.ERROR_MESSAGE);
-			}
-		}
-	}
-
-	private void deleteFile(File file) {
-		file.delete();
-	}
-
-	private void displayMessage() {
-		String message = "You're going to download missing tiles.";
-		JOptionPane.showMessageDialog(null, message, "Resume latest download",
-				JOptionPane.INFORMATION_MESSAGE);
+	public void setTilesToDownload(List<Tile> tiles) {
+		tilesToDownload = tiles;
 	}
 
 	public void cancelDownload() {
@@ -175,13 +147,8 @@ public class Downloader extends Thread {
 					"InterruptedException", JOptionPane.ERROR_MESSAGE);
 		}
 		try {
-			File file = new File(settings.getSaveDirectory() + File.separator
-					+ "MissedElements");
-			ObjectOutputStream stream = new ObjectOutputStream(
-					new FileOutputStream(file));
-			stream.writeObject(tilesToDownload);
-			stream.close();
-			resumeFailedDownload = false;
+			removeDownloadedTilesFromList();
+			writeConfigurationToFile();
 			tilesToDownload = null;
 		} catch (IOException error) {
 			JOptionPane.showMessageDialog(null, "IOException.", "Error",
@@ -189,10 +156,39 @@ public class Downloader extends Thread {
 		}
 	}
 
-	public synchronized String getNumberOfDownloadedTilesSoFar() {
-		++numberOfTilesDownloadedSoFar;
-		String temp = "(" + numberOfTilesDownloadedSoFar + "/" + numberOfTiles
-				+ ")";
-		return temp;
+	private void removeDownloadedTilesFromList() {
+		Iterator<Tile> iterator = tilesToDownload.iterator();
+		while (iterator.hasNext()) {
+			if (iterator.next().isDownloaded() == true) {
+				iterator.remove();
+			}
+		}
+	}
+
+	private void writeConfigurationToFile() throws IOException {
+		File file = new File(settings.getSaveDirectory() + File.separator
+				+ "MissedElements");
+		ObjectOutputStream stream = new ObjectOutputStream(
+				new FileOutputStream(file));
+		stream.writeObject(settings);
+		stream.writeObject(tilesToDownload);
+		stream.close();
+	}
+
+	public int displayInformationWindow() {
+		Coordinates coordinates = settings.getCoordinates();
+		String message = "Your settings:\n" + "- N/S Borders - "
+				+ coordinates.getBorderN() + " : " + coordinates.getBorderS()
+				+ "\n" + "- W/E Borders - " + coordinates.getBorderW() + " : "
+				+ coordinates.getBorderE() + "\n" + "- download type - "
+				+ settings.getDownloadType() + "\n" + "- zoom - "
+				+ settings.getZoom() + "\n" + "- download path - "
+				+ settings.getSaveDirectory() + "\n" + "- tiles number - "
+				+ calculateNumberOfTiles() + "\n\n" + "Do you want to proceed?";
+		String[] buttons = { "Yes", "No" };
+		int answer = JOptionPane.showOptionDialog(null, message,
+				"Confirm your settings", JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
+		return answer;
 	}
 }

@@ -1,8 +1,5 @@
 package pl.im.gmd;
 
-// TODO Rewrite re-downloading system
-// TODO Add downloading using proxy servers from list
-
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -23,7 +20,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JScrollPane;
 
 import java.awt.Font;
@@ -287,6 +283,10 @@ public class MainWindow extends JFrame {
 
 	public Settings getSettings() {
 		return settings;
+	}
+	
+	public void setSettings(Settings settings) {
+		this.settings = settings;
 	}
 
 	public JButton getSaveDirectoryButton() {

@@ -55,6 +55,7 @@ public class Tile extends Thread implements Serializable {
 		download();
 	}
 
+	// TODO In this class using proxy manager and servers.
 	private void download() {
 		try {
 			String url = generateUrl(mainWindow.getSettings());
@@ -90,7 +91,7 @@ public class Tile extends Thread implements Serializable {
 				saveTileAsNotAvailable(input);
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(null,
-						"IOException when saving not available tile..",
+						"IOException when saving not available tile.",
 						"IOException", JOptionPane.ERROR_MESSAGE);
 			}
 		} catch (IOException e) {
@@ -143,7 +144,7 @@ public class Tile extends Thread implements Serializable {
 					+ "&s=" + generateGalileoSubstr();
 		} else if (settings.getDownloadType() == "satellite") {
 			temp = "http://" + randomServer("satellite")
-					+ ".google.com/kh/v=145&src=app&x=" + valueX + "&y="
+					+ ".google.com/kh/v=149&src=app&x=" + valueX + "&y="
 					+ valueY + "&z=" + settings.getZoom() + "&s="
 					+ generateGalileoSubstr();
 		}
