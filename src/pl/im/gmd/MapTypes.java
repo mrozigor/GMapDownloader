@@ -9,7 +9,7 @@ package pl.im.gmd;
  */
 public enum MapTypes {
 	MAP("map"),
-	TERRAIN("terrain map"),
+	TERRAIN("terrain"),
 	SATELLITE("satellite");
 	
 	private String name;

@@ -26,6 +26,7 @@ public class Tile extends Thread implements Serializable {
 	private int valueY;
 	private MainWindow mainWindow;
 	private Downloader downloader;
+	private ProxyServerManager serverManager;
 	private boolean isDownloaded = false;
 
 	public Tile(int valueX, int valueY, MainWindow mainWindow,
@@ -34,6 +35,7 @@ public class Tile extends Thread implements Serializable {
 		this.valueY = valueY;
 		this.mainWindow = mainWindow;
 		this.downloader = downloader;
+		this.serverManager = downloader.getProxyServerManager();
 	}
 
 	public int getValueX() {
@@ -55,14 +57,14 @@ public class Tile extends Thread implements Serializable {
 		download();
 	}
 
-	// TODO In this class using proxy manager and servers.
 	private void download() {
 		try {
-			String url = generateUrl(mainWindow.getSettings());
-			URL connection = new URL(url);
+			String tileUrl = generateTileUrl(mainWindow.getSettings());
+			ProxyServer server = serverManager.getProxyServer();
+			URL connection = new URL("http", server.getServerAddress(), server.getServerPort(), tileUrl);
 			BufferedInputStream input = new BufferedInputStream(
 					connection.openStream());
-			byte[] tab = new byte[200000];
+			byte[] tab = new byte[300000];
 			int temp;
 			int i = 0;
 			while ((temp = input.read()) != -1) {
@@ -74,11 +76,11 @@ public class Tile extends Thread implements Serializable {
 			FileOutputStream file = new FileOutputStream(filePath);
 			file.write(tab);
 			file.close();
-			Thread.sleep(randomSleep());
 			isDownloaded = true;
 			mainWindow.writeMessage("Tile " + this
 					+ " was downloaded successfully "
 					+ downloader.getNumberOfDownloadedTilesSoFar());
+			Thread.sleep(randomSleep());
 		} catch (MalformedURLException e) {
 			JOptionPane.showMessageDialog(null, "MalformedURLException.",
 					"MalformedURLException", JOptionPane.ERROR_MESSAGE);
@@ -91,7 +93,7 @@ public class Tile extends Thread implements Serializable {
 				saveTileAsNotAvailable(input);
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(null,
-						"IOException when saving not available tile.",
+						"IOException when saving not available tile image.",
 						"IOException", JOptionPane.ERROR_MESSAGE);
 			}
 		} catch (IOException e) {
@@ -135,7 +137,7 @@ public class Tile extends Thread implements Serializable {
 		return temp;
 	}
 
-	private String generateUrl(Settings settings) {
+	private String generateTileUrl(Settings settings) {
 		String temp = null;
 		if (settings.getDownloadType() == MapTypes.MAP) {
 			temp = "https://" + randomServer(settings.getDownloadType())

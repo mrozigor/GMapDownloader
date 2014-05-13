@@ -13,4 +13,9 @@ public class ProxyServerManager {
 	public ProxyServerManager() {
 		// TODO Initializing list
 	}
+
+	public ProxyServer getProxyServer() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
