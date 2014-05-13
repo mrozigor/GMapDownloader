@@ -62,7 +62,7 @@ public class Tile extends Thread implements Serializable {
 			URL connection = new URL(url);
 			BufferedInputStream input = new BufferedInputStream(
 					connection.openStream());
-			byte[] tab = new byte[20000];
+			byte[] tab = new byte[200000];
 			int temp;
 			int i = 0;
 			while ((temp = input.read()) != -1) {
@@ -137,16 +137,21 @@ public class Tile extends Thread implements Serializable {
 
 	private String generateUrl(Settings settings) {
 		String temp = null;
-		if (settings.getDownloadType() == "map") {
-			temp = "https://" + randomServer("map")
+		if (settings.getDownloadType() == MapTypes.MAP) {
+			temp = "https://" + randomServer(settings.getDownloadType())
 					+ ".google.com/vt/lyrs=h@249000000&hl=pl&src=app&x="
 					+ valueX + "&y=" + valueY + "&z=" + settings.getZoom()
 					+ "&s=" + generateGalileoSubstr();
-		} else if (settings.getDownloadType() == "satellite") {
-			temp = "http://" + randomServer("satellite")
+		} else if (settings.getDownloadType() == MapTypes.SATELLITE) {
+			temp = "http://" + randomServer(settings.getDownloadType())
 					+ ".google.com/kh/v=149&src=app&x=" + valueX + "&y="
 					+ valueY + "&z=" + settings.getZoom() + "&s="
 					+ generateGalileoSubstr();
+		} else if (settings.getDownloadType() == MapTypes.TERRAIN) {
+			temp = "https://" + randomServer(settings.getDownloadType())
+					+ ".google.com/vt/lyrs=m@249000000&hl=pl&src=app&x="
+					+ valueX + "&y=" + valueY + "&z=" + settings.getZoom()
+					+ "&s=" + generateGalileoSubstr();
 		}
 		return temp;
 	}
@@ -158,13 +163,13 @@ public class Tile extends Thread implements Serializable {
 		return substr;
 	}
 
-	private String randomServer(String downloadType) {
+	private String randomServer(MapTypes downloadType) {
 		String temp = null;
 		Random generator = new Random();
 		int serverNumber = generator.nextInt(4);
-		if (downloadType == "map") {
+		if (downloadType == MapTypes.MAP || downloadType == MapTypes.TERRAIN) {
 			temp = "mts" + serverNumber;
-		} else if (downloadType == "satellite") {
+		} else if (downloadType == MapTypes.SATELLITE) {
 			temp = "khms" + serverNumber;
 		}
 		return temp;

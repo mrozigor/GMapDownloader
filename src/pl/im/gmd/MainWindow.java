@@ -51,6 +51,7 @@ public class MainWindow extends JFrame {
 	private JRadioButton mapRadioButton;
 	private JRadioButton satelliteRadioButton;
 	private Settings settings;
+	private JRadioButton terrainMapRadioButton;
 
 	/**
 	 * Launch the application.
@@ -77,8 +78,11 @@ public class MainWindow extends JFrame {
 				cancelDownloadButton.doClick();
 			}
 		});
-
+		
 		settings = new Settings();
+		ButtonGroup group = new ButtonGroup();
+		ButtonsListener buttonsListener = new ButtonsListener(this);
+		
 		setTitle("GMap Downloader");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -86,10 +90,10 @@ public class MainWindow extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[] { 65, 50, 0, 0, 0, 0 };
+		gbl_contentPane.columnWidths = new int[] { 65, 50, 0, 0, 0, 0, 0 };
 		gbl_contentPane.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0 };
 		gbl_contentPane.columnWeights = new double[] { 0.0, 1.0, 0.0, 1.0, 1.0,
-				Double.MIN_VALUE };
+				0.0, Double.MIN_VALUE };
 		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0,
 				1.0, Double.MIN_VALUE };
 		contentPane.setLayout(gbl_contentPane);
@@ -116,7 +120,7 @@ public class MainWindow extends JFrame {
 
 		zoomLabel = new JLabel("Zoom");
 		GridBagConstraints gbc_zoomLabel = new GridBagConstraints();
-		gbc_zoomLabel.gridwidth = 2;
+		gbc_zoomLabel.gridwidth = 3;
 		gbc_zoomLabel.insets = new Insets(0, 0, 5, 0);
 		gbc_zoomLabel.gridx = 3;
 		gbc_zoomLabel.gridy = 0;
@@ -152,7 +156,7 @@ public class MainWindow extends JFrame {
 		});
 		zoomComboBox.setModel(new DefaultComboBoxModel(ZoomLevel.values()));
 		GridBagConstraints gbc_zoomComboBox = new GridBagConstraints();
-		gbc_zoomComboBox.gridwidth = 2;
+		gbc_zoomComboBox.gridwidth = 3;
 		gbc_zoomComboBox.insets = new Insets(0, 0, 5, 0);
 		gbc_zoomComboBox.fill = GridBagConstraints.BOTH;
 		gbc_zoomComboBox.gridx = 3;
@@ -181,7 +185,7 @@ public class MainWindow extends JFrame {
 
 		mapTypeLabel = new JLabel("Map type");
 		GridBagConstraints gbc_mapTypeLabel = new GridBagConstraints();
-		gbc_mapTypeLabel.gridwidth = 2;
+		gbc_mapTypeLabel.gridwidth = 3;
 		gbc_mapTypeLabel.insets = new Insets(0, 0, 5, 0);
 		gbc_mapTypeLabel.gridx = 3;
 		gbc_mapTypeLabel.gridy = 2;
@@ -206,11 +210,11 @@ public class MainWindow extends JFrame {
 		gbc_eBorderText.gridy = 3;
 		contentPane.add(eBorderText, gbc_eBorderText);
 		eBorderText.setColumns(10);
-
+		
 		mapRadioButton = new JRadioButton("Map");
 		mapRadioButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg) {
-				settings.setDownloadType("map");
+				settings.setDownloadType(MapTypes.MAP);
 			}
 		});
 		GridBagConstraints gbc_mapRadioButton = new GridBagConstraints();
@@ -218,26 +222,37 @@ public class MainWindow extends JFrame {
 		gbc_mapRadioButton.gridx = 3;
 		gbc_mapRadioButton.gridy = 3;
 		contentPane.add(mapRadioButton, gbc_mapRadioButton);
+		group.add(mapRadioButton);
+
+		startDownloadButton = new JButton("Start Download");
+		startDownloadButton.addActionListener(buttonsListener);
 
 		satelliteRadioButton = new JRadioButton("Satellite");
 		satelliteRadioButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg) {
-				settings.setDownloadType("satellite");
+				settings.setDownloadType(MapTypes.SATELLITE);
 			}
 		});
 		GridBagConstraints gbc_satelliteRadioButton = new GridBagConstraints();
 		gbc_satelliteRadioButton.insets = new Insets(0, 0, 5, 0);
-		gbc_satelliteRadioButton.gridx = 4;
+		gbc_satelliteRadioButton.gridx = 5;
 		gbc_satelliteRadioButton.gridy = 3;
 		contentPane.add(satelliteRadioButton, gbc_satelliteRadioButton);
-
-		ButtonGroup group = new ButtonGroup();
-		group.add(mapRadioButton);
 		group.add(satelliteRadioButton);
-
-		ButtonsListener buttonsListener = new ButtonsListener(this);
-		startDownloadButton = new JButton("Start Download");
-		startDownloadButton.addActionListener(buttonsListener);
+		
+		terrainMapRadioButton = new JRadioButton("Terrain map");
+		terrainMapRadioButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg) {
+				settings.setDownloadType(MapTypes.TERRAIN);
+			}
+		});
+		GridBagConstraints gbc_terrainMapRadioButton = new GridBagConstraints();
+		gbc_terrainMapRadioButton.insets = new Insets(0, 0, 5, 5);
+		gbc_terrainMapRadioButton.gridx = 4;
+		gbc_terrainMapRadioButton.gridy = 3;
+		contentPane.add(terrainMapRadioButton, gbc_terrainMapRadioButton);
+		group.add(terrainMapRadioButton);
+		
 		startDownloadButton.setFont(new Font("Tahoma", Font.BOLD, 11));
 		GridBagConstraints gbc_startDownloadButton = new GridBagConstraints();
 		gbc_startDownloadButton.gridwidth = 2;
@@ -251,8 +266,8 @@ public class MainWindow extends JFrame {
 		cancelDownloadButton.addActionListener(buttonsListener);
 		cancelDownloadButton.setFont(new Font("Tahoma", Font.BOLD, 11));
 		GridBagConstraints gbc_cancelDownloadButton = new GridBagConstraints();
-		gbc_cancelDownloadButton.gridwidth = 5;
-		gbc_cancelDownloadButton.insets = new Insets(0, 0, 5, 5);
+		gbc_cancelDownloadButton.gridwidth = 6;
+		gbc_cancelDownloadButton.insets = new Insets(0, 0, 5, 0);
 		gbc_cancelDownloadButton.fill = GridBagConstraints.BOTH;
 		gbc_cancelDownloadButton.gridx = 0;
 		gbc_cancelDownloadButton.gridy = 4;
@@ -262,7 +277,7 @@ public class MainWindow extends JFrame {
 		saveDirectoryButton = new JButton("Save Directory");
 		saveDirectoryButton.addActionListener(buttonsListener);
 		GridBagConstraints gbc_saveDirectoryButton = new GridBagConstraints();
-		gbc_saveDirectoryButton.gridwidth = 2;
+		gbc_saveDirectoryButton.gridwidth = 3;
 		gbc_saveDirectoryButton.fill = GridBagConstraints.BOTH;
 		gbc_saveDirectoryButton.insets = new Insets(0, 0, 5, 0);
 		gbc_saveDirectoryButton.gridx = 3;
@@ -274,7 +289,7 @@ public class MainWindow extends JFrame {
 		messageArea.setText("");
 		messageArea.setEditable(false);
 		GridBagConstraints gbc_messageArea = new GridBagConstraints();
-		gbc_messageArea.gridwidth = 5;
+		gbc_messageArea.gridwidth = 6;
 		gbc_messageArea.fill = GridBagConstraints.BOTH;
 		gbc_messageArea.gridx = 0;
 		gbc_messageArea.gridy = 5;
@@ -284,7 +299,7 @@ public class MainWindow extends JFrame {
 	public Settings getSettings() {
 		return settings;
 	}
-	
+
 	public void setSettings(Settings settings) {
 		this.settings = settings;
 	}

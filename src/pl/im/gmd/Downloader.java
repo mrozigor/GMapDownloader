@@ -83,6 +83,7 @@ public class Downloader extends Thread {
 				tilesToDownload.add(new Tile(x, y, mainWindow, this));
 			}
 		}
+		numberOfTiles = tilesToDownload.size();
 	}
 
 	private int calculateNumberOfTiles() {

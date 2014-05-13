@@ -10,7 +10,7 @@ package pl.im.gmd;
  */
 public class Settings {
 	
-	private String downloadType = null;
+	private MapTypes downloadType = null;
 	private int zoom = 1;
 	private String saveDirectory = null;
 	private Coordinates coordinates = null;
@@ -19,7 +19,7 @@ public class Settings {
 	 * @param type
 	 *            Type of download. Two available are "map" and "satellite".
 	 */
-	public void setDownloadType(String type) {
+	public void setDownloadType(MapTypes type) {
 		downloadType = type;
 	}
 
@@ -57,7 +57,7 @@ public class Settings {
 		return saveDirectory;
 	}
 	
-	public String getDownloadType() {
+	public MapTypes getDownloadType() {
 		return downloadType;
 	}
 }
