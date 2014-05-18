@@ -14,6 +14,7 @@ public class Settings {
 	private int zoom = 1;
 	private String saveDirectory = null;
 	private Coordinates coordinates = null;
+	private String proxyServerList = null;
 
 	/**
 	 * @param type
@@ -33,6 +34,10 @@ public class Settings {
 
 	public void setCoordinates(Coordinates coordinates) {
 		this.coordinates = coordinates;
+	}
+	
+	public void setProxyServerList(String serverList) {
+		proxyServerList = serverList;
 	}
 
 	public void checkAllOptionsAreSelected() throws Exception {
@@ -59,5 +64,9 @@ public class Settings {
 	
 	public MapTypes getDownloadType() {
 		return downloadType;
+	}
+	
+	public String getProxyServerList() {
+		return proxyServerList;
 	}
 }

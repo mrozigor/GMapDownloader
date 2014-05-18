@@ -35,6 +35,8 @@ import java.awt.event.WindowEvent;
 
 public class MainWindow extends JFrame {
 
+	// TODO Add new window in which selecting file with proxy server list
+	// TODO Small info strip on bottom with current loaded list file
 	private JPanel contentPane;
 	private JTextField nBorderText;
 	private JTextField sBorderText;

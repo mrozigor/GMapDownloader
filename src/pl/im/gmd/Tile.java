@@ -60,8 +60,7 @@ public class Tile extends Thread implements Serializable {
 	private void download() {
 		try {
 			String tileUrl = generateTileUrl(mainWindow.getSettings());
-			ProxyServer server = serverManager.getProxyServer();
-			URL connection = new URL("http", server.getServerAddress(), server.getServerPort(), tileUrl);
+			URL connection = serverManager.getConnection(tileUrl);
 			BufferedInputStream input = new BufferedInputStream(
 					connection.openStream());
 			byte[] tab = new byte[300000];
