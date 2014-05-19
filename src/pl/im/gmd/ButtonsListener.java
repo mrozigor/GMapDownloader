@@ -77,8 +77,7 @@ public class ButtonsListener extends Thread implements ActionListener {
 				settings.setSaveDirectory(directory);
 			}
 		} else if (arg.getSource() == mainWindow.getProxySettingsMenu()) {
-			// TODO Implement selecting file with proxy server list and display
-			// info about which one is loaded (or default = none)
+			new ProxyMenu(settings).setVisible(true);
 		} else if (arg.getSource() == mainWindow.getHelpMenu()) {
 			// TODO Implement help window
 		} else if (arg.getSource() == mainWindow.getAboutMenu()) {

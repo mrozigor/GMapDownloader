@@ -39,7 +39,7 @@ public class Downloader extends Thread {
 	public Downloader(MainWindow mainWindow) {
 		this.mainWindow = mainWindow;
 		this.settings = mainWindow.getSettings();
-		this.proxyServerManager = new ProxyServerManager(settings.getProxyServerList());
+		this.proxyServerManager = new ProxyServerManager(settings.getProxyServerListFilePath());
 	}
 
 	public void startDownload() {

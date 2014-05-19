@@ -14,7 +14,7 @@ public class Settings {
 	private int zoom = 1;
 	private String saveDirectory = null;
 	private Coordinates coordinates = null;
-	private String proxyServerList = null;
+	private String proxyServerListFilePath = "none";
 
 	/**
 	 * @param type
@@ -36,8 +36,8 @@ public class Settings {
 		this.coordinates = coordinates;
 	}
 	
-	public void setProxyServerList(String serverList) {
-		proxyServerList = serverList;
+	public void setProxyServerListFilePath(String serverListFilePath) {
+		proxyServerListFilePath = serverListFilePath;
 	}
 
 	public void checkAllOptionsAreSelected() throws Exception {
@@ -66,7 +66,7 @@ public class Settings {
 		return downloadType;
 	}
 	
-	public String getProxyServerList() {
-		return proxyServerList;
+	public String getProxyServerListFilePath() {
+		return proxyServerListFilePath;
 	}
 }

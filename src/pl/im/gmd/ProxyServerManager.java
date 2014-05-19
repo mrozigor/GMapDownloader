@@ -17,7 +17,7 @@ public class ProxyServerManager {
 	private List<ProxyServer> serverList = null;
 
 	public ProxyServerManager(String path) {
-		if (path == null) {
+		if (path == "none") {
 			serverList = null;
 		} else {
 			// TODO Loading and parsing file
