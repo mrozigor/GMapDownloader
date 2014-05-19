@@ -12,6 +12,7 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Icon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -75,6 +76,13 @@ public class ButtonsListener extends Thread implements ActionListener {
 						.toString();
 				settings.setSaveDirectory(directory);
 			}
+		} else if (arg.getSource() == mainWindow.getProxySettingsMenu()) {
+			// TODO Implement selecting file with proxy server list and display
+			// info about which one is loaded (or default = none)
+		} else if (arg.getSource() == mainWindow.getHelpMenu()) {
+			// TODO Implement help window
+		} else if (arg.getSource() == mainWindow.getAboutMenu()) {
+			JOptionPane.showMessageDialog(null, "GMap Downloader is written by Igor Mroz.\n\nA.D. 2014", "About", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 

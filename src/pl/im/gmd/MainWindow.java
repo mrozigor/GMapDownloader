@@ -32,11 +32,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 public class MainWindow extends JFrame {
 
-	// TODO Add new window in which selecting file with proxy server list
-	// TODO Small info strip on bottom with current loaded list file
 	private JPanel contentPane;
 	private JTextField nBorderText;
 	private JTextField sBorderText;
@@ -54,6 +55,12 @@ public class MainWindow extends JFrame {
 	private JRadioButton satelliteRadioButton;
 	private Settings settings;
 	private JRadioButton terrainMapRadioButton;
+	private JMenuBar menuBar;
+	private JMenu optionsMenu;
+	private JMenu hlpMenu;
+	private JMenuItem proxySettingsMenu;
+	private JMenuItem helpMenu;
+	private JMenuItem aboutMenu;
 
 	/**
 	 * Launch the application.
@@ -88,6 +95,28 @@ public class MainWindow extends JFrame {
 		setTitle("GMap Downloader");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
+		
+		menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		optionsMenu = new JMenu("Options");
+		menuBar.add(optionsMenu);
+		
+		proxySettingsMenu = new JMenuItem("Proxy Settings");
+		optionsMenu.add(proxySettingsMenu);
+		proxySettingsMenu.addActionListener(buttonsListener);
+		
+		hlpMenu = new JMenu("Help");
+		menuBar.add(hlpMenu);
+		
+		helpMenu = new JMenuItem("Help");
+		hlpMenu.add(helpMenu);
+		helpMenu.addActionListener(buttonsListener);
+		
+		aboutMenu = new JMenuItem("About");
+		hlpMenu.add(aboutMenu);
+		aboutMenu.addActionListener(buttonsListener);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -316,6 +345,18 @@ public class MainWindow extends JFrame {
 
 	public JButton getCancelDownloadButton() {
 		return cancelDownloadButton;
+	}
+
+	public JMenuItem getProxySettingsMenu() {
+		return proxySettingsMenu;
+	}
+
+	public JMenuItem getHelpMenu() {
+		return helpMenu;
+	}
+
+	public JMenuItem getAboutMenu() {
+		return aboutMenu;
 	}
 
 	public String getNBorderText() {
