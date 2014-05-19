@@ -1,4 +1,4 @@
-package pl.im.gmd;
+package pl.im.gmd.view;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -18,7 +18,9 @@ import java.awt.Insets;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
-public class ProxyMenu extends JFrame {
+import pl.im.gmd.model.Settings;
+
+public class ProxyWindow extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField pathTextArea;
@@ -28,7 +30,7 @@ public class ProxyMenu extends JFrame {
 	private JButton applyButton;
 	private Settings settings;
 	
-	public ProxyMenu(Settings settings) {
+	public ProxyWindow(Settings settings) {
 		this();
 		this.settings = settings;
 		currentPathLabel.setText("Current path: " + settings.getProxyServerListFilePath());
@@ -37,7 +39,7 @@ public class ProxyMenu extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ProxyMenu() {
+	public ProxyWindow() {
 		setTitle("Proxy Settings");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 350, 150);

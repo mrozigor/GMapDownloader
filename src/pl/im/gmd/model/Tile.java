@@ -1,7 +1,7 @@
 /**
  * 
  */
-package pl.im.gmd;
+package pl.im.gmd.model;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -15,6 +15,8 @@ import java.net.URL;
 import java.util.Random;
 
 import javax.swing.JOptionPane;
+
+import pl.im.gmd.view.MainWindow;
 
 /**
  * @author Igor

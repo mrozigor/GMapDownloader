@@ -1,7 +1,7 @@
 /**
  * 
  */
-package pl.im.gmd;
+package pl.im.gmd.model;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,6 +15,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JOptionPane;
+
+import pl.im.gmd.view.MainWindow;
 
 /**
  * @author Igor

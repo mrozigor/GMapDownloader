@@ -1,7 +1,7 @@
 /**
  * 
  */
-package pl.im.gmd;
+package pl.im.gmd.view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +15,12 @@ import java.util.List;
 import javax.swing.Icon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+
+import pl.im.gmd.model.Coordinates;
+import pl.im.gmd.model.Downloader;
+import pl.im.gmd.model.Settings;
+import pl.im.gmd.model.Tile;
+import pl.im.gmd.model.WrongCoordinatesException;
 
 /**
  * @author Igor
@@ -77,7 +83,7 @@ public class ButtonsListener extends Thread implements ActionListener {
 				settings.setSaveDirectory(directory);
 			}
 		} else if (arg.getSource() == mainWindow.getProxySettingsMenu()) {
-			new ProxyMenu(settings).setVisible(true);
+			new ProxyWindow(settings).setVisible(true);
 		} else if (arg.getSource() == mainWindow.getHelpMenu()) {
 			// TODO Implement help window
 		} else if (arg.getSource() == mainWindow.getAboutMenu()) {

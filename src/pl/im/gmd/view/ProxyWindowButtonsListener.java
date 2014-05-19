@@ -1,7 +1,7 @@
 /**
  * 
  */
-package pl.im.gmd;
+package pl.im.gmd.view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,9 +14,9 @@ import javax.swing.JFileChooser;
  */
 public class ProxyWindowButtonsListener implements ActionListener {
 
-	private ProxyMenu proxyMenuWindow;
+	private ProxyWindow proxyMenuWindow;
 
-	public ProxyWindowButtonsListener(ProxyMenu proxyMenuWindow) {
+	public ProxyWindowButtonsListener(ProxyWindow proxyMenuWindow) {
 		this.proxyMenuWindow = proxyMenuWindow;
 	}
 

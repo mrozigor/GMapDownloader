@@ -1,7 +1,7 @@
 /**
  * 
  */
-package pl.im.gmd;
+package pl.im.gmd.model;
 
 import java.net.MalformedURLException;
 import java.net.URL;

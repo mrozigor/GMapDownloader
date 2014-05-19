@@ -1,7 +1,8 @@
 /**
  * 
  */
-package pl.im.gmd;
+package pl.im.gmd.model;
+
 
 /**
  * @author Igor

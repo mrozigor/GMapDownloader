@@ -1,4 +1,4 @@
-package pl.im.gmd;
+package pl.im.gmd.view;
 
 import java.awt.EventQueue;
 
@@ -32,9 +32,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+
+import pl.im.gmd.model.MapTypes;
+import pl.im.gmd.model.Settings;
+import pl.im.gmd.model.ZoomLevel;
 
 public class MainWindow extends JFrame {
 
