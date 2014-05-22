@@ -74,6 +74,7 @@ public class Downloader extends Thread {
 		}
 		tilesToDownload = null;
 		mainWindow.setButtonsInInitialConfiguration();
+		mainWindow.writeMessage("Download completed!");
 	}
 
 	private void createTilesToDownloadList() {
@@ -143,7 +144,7 @@ public class Downloader extends Thread {
 	public void cancelDownload() {
 		downloadExecutor.shutdownNow();
 		try {
-			while (!downloadExecutor.awaitTermination(1, TimeUnit.SECONDS));
+			while (!downloadExecutor.awaitTermination(5, TimeUnit.SECONDS));
 			mainWindow.writeMessage("Download canceled.");
 		} catch (InterruptedException e) {
 			JOptionPane.showMessageDialog(null,
