@@ -38,7 +38,6 @@ public class ProxyWindowButtonsListener implements ActionListener {
 			proxyMenuWindow.getPathTextArea().setText("none");
 			proxyMenuWindow.getCurrentPathLabel().setText("Current path: none");
 		} else if (arg.getSource() == proxyMenuWindow.getApplyButton()) {
-			// TODO Validate inserted path - is there valid file, if not exception and don't save to settings
 			String path = proxyMenuWindow.getPathTextArea().getText();
 			proxyMenuWindow.getSettings().setProxyServerListFilePath(path);
 			proxyMenuWindow.dispose();

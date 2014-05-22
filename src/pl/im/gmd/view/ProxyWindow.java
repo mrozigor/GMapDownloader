@@ -64,6 +64,7 @@ public class ProxyWindow extends JFrame {
 		contentPane.add(selectPathLabel, gbc_selectPathLabel);
 		
 		pathTextArea = new JTextField();
+		pathTextArea.setEditable(false);
 		GridBagConstraints gbc_pathTextArea = new GridBagConstraints();
 		gbc_pathTextArea.gridwidth = 3;
 		gbc_pathTextArea.insets = new Insets(0, 0, 5, 5);
@@ -72,7 +73,7 @@ public class ProxyWindow extends JFrame {
 		gbc_pathTextArea.gridy = 1;
 		contentPane.add(pathTextArea, gbc_pathTextArea);
 		pathTextArea.setColumns(10);
-		pathTextArea.setText(null);
+		pathTextArea.setText("none");
 		
 		selectPathButton = new JButton("...");
 		GridBagConstraints gbc_selectPathButton = new GridBagConstraints();

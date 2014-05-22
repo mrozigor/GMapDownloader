@@ -22,6 +22,7 @@ public class ProxyServerManager {
 		} else {
 			// TODO Loading and parsing file
 			// TODO Initializing list
+			// TODO Validating file format - proxys ip:port, one in a row
 		}
 	}
 
