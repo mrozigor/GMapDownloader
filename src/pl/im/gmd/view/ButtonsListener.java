@@ -87,7 +87,7 @@ public class ButtonsListener extends Thread implements ActionListener {
 		} else if (arg.getSource() == mainWindow.getHelpMenu()) {
 			// TODO Implement help window
 		} else if (arg.getSource() == mainWindow.getAboutMenu()) {
-			JOptionPane.showMessageDialog(null, "GMap Downloader is written by Igor Mroz.\n\nA.D. 2014", "About", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "GMap Downloader\nAuthor: Igor Mroz\n\nA.D. 2014", "About", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 
