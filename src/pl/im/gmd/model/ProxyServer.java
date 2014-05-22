@@ -8,15 +8,21 @@ package pl.im.gmd.model;
  *
  */
 public class ProxyServer {
+	
+	private String ip;
+	private int port;
+
+	public ProxyServer(String ip, String port) {
+		this.ip = ip;
+		this.port = Integer.parseInt(port);
+	}
 
 	public int getServerPort() {
-		// TODO Auto-generated method stub
-		return 0;
+		return port;
 	}
 
 	public String getServerAddress() {
-		// TODO Auto-generated method stub
-		return null;
+		return ip;
 	}
 
 }

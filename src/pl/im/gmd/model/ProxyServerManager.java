@@ -14,7 +14,6 @@ import java.util.List;
  * 
  */
 public class ProxyServerManager {
-	// TODO If there isn't list with proxys, download as usual.
 	// TODO List of proxy's, list of used proxy's.
 	private List<ProxyServer> serverList = null;
 
