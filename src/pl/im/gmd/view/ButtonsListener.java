@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
@@ -18,9 +19,11 @@ import javax.swing.JOptionPane;
 
 import pl.im.gmd.model.Coordinates;
 import pl.im.gmd.model.Downloader;
+import pl.im.gmd.model.MissingSettingException;
 import pl.im.gmd.model.Settings;
 import pl.im.gmd.model.Tile;
 import pl.im.gmd.model.WrongCoordinatesException;
+import pl.im.gmd.model.WrongProxyServerFileStructureException;
 
 /**
  * @author Igor
@@ -54,6 +57,12 @@ public class ButtonsListener extends Thread implements ActionListener {
 					mainWindow.setButtonsInSwapedConfiguration();
 					downloader.startDownload();
 				}
+			} catch (FileNotFoundException error) {
+				JOptionPane.showMessageDialog(null, error.getMessage(),
+						"File not found", JOptionPane.ERROR_MESSAGE);
+			} catch (WrongProxyServerFileStructureException error) {
+				JOptionPane.showMessageDialog(null, error.getMessage(),
+						"Wrong file structure", JOptionPane.ERROR_MESSAGE);
 			} catch (NumberFormatException error) {
 				JOptionPane.showMessageDialog(null,
 						"Please enter correct number.", "Wrong number format",
@@ -61,9 +70,12 @@ public class ButtonsListener extends Thread implements ActionListener {
 			} catch (WrongCoordinatesException error) {
 				JOptionPane.showMessageDialog(null, error.getMessage(),
 						"Wrong coordinates", JOptionPane.INFORMATION_MESSAGE);
-			} catch (Exception error) {
+			} catch (MissingSettingException error) {
 				JOptionPane.showMessageDialog(null, error.getMessage(),
 						"Missing settings", JOptionPane.ERROR_MESSAGE);
+			} catch (IOException error) {
+				JOptionPane.showMessageDialog(null, error.getMessage(),
+						"General IOException", JOptionPane.ERROR_MESSAGE);
 			}
 		} else if (arg.getSource() == mainWindow.getCancelDownloadButton()) {
 			if (downloader != null
@@ -87,7 +99,9 @@ public class ButtonsListener extends Thread implements ActionListener {
 		} else if (arg.getSource() == mainWindow.getHelpMenu()) {
 			// TODO Implement help window
 		} else if (arg.getSource() == mainWindow.getAboutMenu()) {
-			JOptionPane.showMessageDialog(null, "GMap Downloader\nAuthor: Igor Mroz\n\nA.D. 2014", "About", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null,
+					"GMap Downloader\nAuthor: Igor Mroz\n\nA.D. 2014", "About",
+					JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 

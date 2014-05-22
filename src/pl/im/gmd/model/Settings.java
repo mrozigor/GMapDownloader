@@ -41,13 +41,13 @@ public class Settings {
 		proxyServerListFilePath = serverListFilePath;
 	}
 
-	public void checkAllOptionsAreSelected() throws Exception {
+	public void checkAllOptionsAreSelected() throws MissingSettingException {
 		if (coordinates == null) {
-			throw new Exception("Please enter coordinates.");
+			throw new MissingSettingException("Please enter coordinates.");
 		} else if (downloadType == null) {
-			throw new Exception("Please select download type.");
+			throw new MissingSettingException("Please select download type.");
 		} else if (saveDirectory == null) {
-			throw new Exception("Please select download directory.");
+			throw new MissingSettingException("Please select download directory.");
 		}
 	}
 	

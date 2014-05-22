@@ -4,6 +4,7 @@
 package pl.im.gmd.model;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -38,7 +39,7 @@ public class Downloader extends Thread {
 	private ProxyServerManager proxyServerManager = null;
 	
 
-	public Downloader(MainWindow mainWindow) {
+	public Downloader(MainWindow mainWindow) throws WrongProxyServerFileStructureException, FileNotFoundException, IOException {
 		this.mainWindow = mainWindow;
 		this.settings = mainWindow.getSettings();
 		this.proxyServerManager = new ProxyServerManager(settings.getProxyServerListFilePath());

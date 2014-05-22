@@ -3,6 +3,8 @@
  */
 package pl.im.gmd.model;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -16,13 +18,12 @@ public class ProxyServerManager {
 	// TODO List of proxy's, list of used proxy's.
 	private List<ProxyServer> serverList = null;
 
-	public ProxyServerManager(String path) {
+	public ProxyServerManager(String path) throws WrongProxyServerFileStructureException, FileNotFoundException, IOException {
 		if (path == "none") {
 			serverList = null;
 		} else {
-			// TODO Loading and parsing file
-			// TODO Initializing list
-			// TODO Validating file format - proxys ip:port, one in a row
+			ServerLoader loader = new ServerLoader(path);
+			serverList = loader.getProxyServers();
 		}
 	}
 
