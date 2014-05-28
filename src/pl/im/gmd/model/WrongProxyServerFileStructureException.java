@@ -9,6 +9,7 @@ package pl.im.gmd.model;
  */
 public class WrongProxyServerFileStructureException extends Exception {
 
+	private static final long serialVersionUID = 28022075402647321L;
 	private String message = null;
 
 	public WrongProxyServerFileStructureException() {

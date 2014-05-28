@@ -4,7 +4,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import java.awt.EventQueue;
 import java.awt.GridBagLayout;
 
 import javax.swing.JLabel;
@@ -22,6 +21,7 @@ import pl.im.gmd.model.Settings;
 
 public class ProxyWindow extends JFrame {
 
+	private static final long serialVersionUID = 4858987241520204824L;
 	private JPanel contentPane;
 	private JTextField pathTextArea;
 	private JLabel currentPathLabel;

@@ -9,6 +9,7 @@ package pl.im.gmd.model;
  */
 public class WrongCoordinatesException extends Exception {
 	
+	private static final long serialVersionUID = 7377024707458232174L;
 	private String message = null;
 	
 	public WrongCoordinatesException() {

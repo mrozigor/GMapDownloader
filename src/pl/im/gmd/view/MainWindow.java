@@ -44,13 +44,14 @@ import pl.im.gmd.model.ZoomLevel;
 
 public class MainWindow extends JFrame {
 
+	private static final long serialVersionUID = 8438936978792718404L;
 	private JPanel contentPane;
 	private JTextField nBorderText;
 	private JTextField sBorderText;
 	private JTextField wBorderText;
 	private JTextField eBorderText;
 	private JLabel zoomLabel;
-	private JComboBox zoomComboBox;
+	private JComboBox<ZoomLevel> zoomComboBox;
 	private JButton saveDirectoryButton;
 	private JButton startDownloadButton;
 	private JButton cancelDownloadButton;
@@ -184,15 +185,15 @@ public class MainWindow extends JFrame {
 		contentPane.add(sBorderText, gbc_sBorderText);
 		sBorderText.setColumns(10);
 
-		zoomComboBox = new JComboBox();
+		zoomComboBox = new JComboBox<ZoomLevel>();
 		zoomComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg) {
-				JComboBox comboBox = (JComboBox) arg.getSource();
+				JComboBox<ZoomLevel> comboBox = (JComboBox<ZoomLevel>) arg.getSource();
 				settings.setZoomLevel(Integer.parseInt(comboBox
 						.getSelectedItem().toString()));
 			}
 		});
-		zoomComboBox.setModel(new DefaultComboBoxModel(ZoomLevel.values()));
+		zoomComboBox.setModel(new DefaultComboBoxModel<ZoomLevel>(ZoomLevel.values()));
 		GridBagConstraints gbc_zoomComboBox = new GridBagConstraints();
 		gbc_zoomComboBox.gridwidth = 3;
 		gbc_zoomComboBox.insets = new Insets(0, 0, 5, 0);

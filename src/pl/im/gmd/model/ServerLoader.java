@@ -8,8 +8,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.Inet4Address;
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +39,7 @@ public class ServerLoader {
 			serverData = line.split(":", 2);
 			if (!isValidIp4Address(serverData[0])
 					|| !isValidPort(serverData[1])) {
+				input.close();
 				throw new WrongProxyServerFileStructureException(
 						"Wrong file structure on line " + lineNumber);
 			}

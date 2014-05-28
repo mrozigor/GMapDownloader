@@ -142,6 +142,7 @@ public class Downloader extends Thread {
 	}
 
 	public void cancelDownload() {
+		// TODO Rewrite so it should call abort() method.
 		downloadExecutor.shutdownNow();
 		try {
 			while (!downloadExecutor.awaitTermination(5, TimeUnit.SECONDS));

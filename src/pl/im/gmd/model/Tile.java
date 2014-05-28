@@ -3,6 +3,8 @@
  */
 package pl.im.gmd.model;
 
+// TODO abort() method in run()'s while
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,6 +26,7 @@ import pl.im.gmd.view.MainWindow;
  */
 public class Tile extends Thread implements Serializable {
 
+	private static final long serialVersionUID = 5935684472036413795L;
 	private int valueX;
 	private int valueY;
 	private MainWindow mainWindow;
@@ -38,6 +41,7 @@ public class Tile extends Thread implements Serializable {
 		this.mainWindow = mainWindow;
 		this.downloader = downloader;
 		this.serverManager = downloader.getProxyServerManager();
+		this.setDaemon(true);
 	}
 
 	public int getValueX() {

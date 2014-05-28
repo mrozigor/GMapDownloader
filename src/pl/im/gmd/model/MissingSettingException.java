@@ -9,6 +9,7 @@ package pl.im.gmd.model;
  */
 public class MissingSettingException extends Exception {
 
+	private static final long serialVersionUID = 5920730836830149627L;
 	private String message = null;
 
 	public MissingSettingException() {
