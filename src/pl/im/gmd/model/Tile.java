@@ -3,8 +3,6 @@
  */
 package pl.im.gmd.model;
 
-// TODO abort() method in run()'s while
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,6 +31,7 @@ public class Tile extends Thread implements Serializable {
 	private Downloader downloader;
 	private ProxyServerManager serverManager;
 	private boolean isDownloaded = false;
+	private boolean abort = false;
 
 	public Tile(int valueX, int valueY, MainWindow mainWindow,
 			Downloader downloader) {
@@ -60,6 +59,9 @@ public class Tile extends Thread implements Serializable {
 
 	@Override
 	public void run() {
+		if(abort) {
+			return;
+		}
 		download();
 	}
 
@@ -184,5 +186,9 @@ public class Tile extends Thread implements Serializable {
 
 	public boolean isDownloaded() {
 		return isDownloaded;
+	}
+
+	public void abort() {
+		abort = true;
 	}
 }

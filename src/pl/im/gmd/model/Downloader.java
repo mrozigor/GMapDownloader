@@ -37,12 +37,14 @@ public class Downloader extends Thread {
 	private int numberOfTilesDownloadedSoFar = 0;
 	private final int MAXIMUM_DOWNLOAD_AT_TIME = 4;
 	private ProxyServerManager proxyServerManager = null;
-	
 
-	public Downloader(MainWindow mainWindow) throws WrongProxyServerFileStructureException, FileNotFoundException, IOException {
+	public Downloader(MainWindow mainWindow)
+			throws WrongProxyServerFileStructureException,
+			FileNotFoundException, IOException {
 		this.mainWindow = mainWindow;
 		this.settings = mainWindow.getSettings();
-		this.proxyServerManager = new ProxyServerManager(settings.getProxyServerListFilePath());
+		this.proxyServerManager = new ProxyServerManager(
+				settings.getProxyServerListFilePath());
 	}
 
 	public void startDownload() {
@@ -128,11 +130,12 @@ public class Downloader extends Thread {
 				+ ")";
 		return temp;
 	}
-	
+
 	public ProxyServerManager getProxyServerManager() {
 		return proxyServerManager;
-		
+
 	}
+
 	public void setSettings(Settings settings) {
 		this.settings = settings;
 	}
@@ -142,10 +145,13 @@ public class Downloader extends Thread {
 	}
 
 	public void cancelDownload() {
-		// TODO Rewrite so it should call abort() method.
+		for (Tile tile : tilesToDownload) {
+			tile.abort();
+		}
 		downloadExecutor.shutdownNow();
 		try {
-			while (!downloadExecutor.awaitTermination(5, TimeUnit.SECONDS));
+			while (!downloadExecutor.awaitTermination(5, TimeUnit.SECONDS))
+				;
 			mainWindow.writeMessage("Download canceled.");
 		} catch (InterruptedException e) {
 			JOptionPane.showMessageDialog(null,

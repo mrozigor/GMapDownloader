@@ -384,7 +384,7 @@ public class MainWindow extends JFrame {
 	}
 
 	public synchronized void writeMessage(String message) {
-		messageArea.setText(messageArea.getText().concat("\n" + message));
+		messageArea.setText(messageArea.getText().concat(message + "\n"));
 	}
 
 	public void clearMessageArea() {
